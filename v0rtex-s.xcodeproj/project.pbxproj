@@ -65,17 +65,14 @@
 		EE5252AB1FDA4F2F00993801 /* v0rtex */ = {
 			isa = PBXGroup;
 			children = (
+				EE5252BB1FDA4F2F00993801 /* main.m */,
 				EE5252AC1FDA4F2F00993801 /* AppDelegate.h */,
 				EE5252AD1FDA4F2F00993801 /* AppDelegate.m */,
+				EE5169291FDC2C9D00805460 /* common.h */,
+				EE5169271FDC2A7000805460 /* sploit.m */,
 				EE5252AF1FDA4F2F00993801 /* ViewController.h */,
 				EE5252B01FDA4F2F00993801 /* ViewController.m */,
-				EE5252B21FDA4F2F00993801 /* Main.storyboard */,
-				EE5169271FDC2A7000805460 /* sploit.m */,
-				EE5169291FDC2C9D00805460 /* common.h */,
-				EE5252B51FDA4F2F00993801 /* Assets.xcassets */,
-				EE5252B71FDA4F2F00993801 /* LaunchScreen.storyboard */,
-				EE5252BA1FDA4F2F00993801 /* Info.plist */,
-				EE5252BB1FDA4F2F00993801 /* main.m */,
+				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
 			);
 			path = v0rtex;
 			sourceTree = "<group>";
@@ -86,6 +83,17 @@
 				EE665E251FDC013D00FF457E /* IOKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EEAC27D31FDDB0A3003C1801 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EE5252BA1FDA4F2F00993801 /* Info.plist */,
+				EE5252B21FDA4F2F00993801 /* Main.storyboard */,
+				EE5252B51FDA4F2F00993801 /* Assets.xcassets */,
+				EE5252B71FDA4F2F00993801 /* LaunchScreen.storyboard */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -123,7 +131,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex" */;
+			buildConfigurationList = EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex-s" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -329,7 +337,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex" */ = {
+		EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex-s" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EE5252BD1FDA4F2F00993801 /* Debug */,

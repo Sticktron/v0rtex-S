@@ -311,7 +311,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 23C653WLNB;
-				INFOPLIST_FILE = v0rtex/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sticktron.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -327,7 +327,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 23C653WLNB;
-				INFOPLIST_FILE = v0rtex/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sticktron.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";

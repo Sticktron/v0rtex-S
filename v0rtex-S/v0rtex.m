@@ -66,19 +66,34 @@
 //#define OFFSET_ROP_ADD_X0_X0_0x10                   0xfffffff0063c5398
 
 // iPhone 6S (iPhone8,1) 10.3.2
-#define OFFSET_ZONE_MAP                             0xfffffff007548478 /* "zone_init: kmem_suballoc failed" */
-#define OFFSET_KERNEL_MAP                           0xfffffff0075a4050
-#define OFFSET_KERNEL_TASK                          0xfffffff0075a4048
-#define OFFSET_REALHOST                             0xfffffff00752aba0 /* host_priv_self */
-#define OFFSET_BZERO                                0xfffffff007081f80
-#define OFFSET_BCOPY                                0xfffffff007081dc0
-#define OFFSET_COPYIN                               0xfffffff0071806f4
-#define OFFSET_COPYOUT                              0xfffffff0071808e8
-#define OFFSET_IPC_PORT_ALLOC_SPECIAL               0xfffffff007099e94 /* convert_task_suspension_token_to_port */
-#define OFFSET_IPC_KOBJECT_SET                      0xfffffff0070ad16c /* convert_task_suspension_token_to_port */
-#define OFFSET_IPC_PORT_MAKE_SEND                   0xfffffff0070999b8 /* "ipc_host_init" */
-#define OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         0xfffffff006e7c9f8 // + 0x1030
-#define OFFSET_ROP_ADD_X0_X0_0x10                   0xfffffff0064b1398
+//#define OFFSET_ZONE_MAP                             0xfffffff007548478 /* "zone_init: kmem_suballoc failed" */
+//#define OFFSET_KERNEL_MAP                           0xfffffff0075a4050
+//#define OFFSET_KERNEL_TASK                          0xfffffff0075a4048
+//#define OFFSET_REALHOST                             0xfffffff00752aba0 /* host_priv_self */
+//#define OFFSET_BZERO                                0xfffffff007081f80
+//#define OFFSET_BCOPY                                0xfffffff007081dc0
+//#define OFFSET_COPYIN                               0xfffffff0071806f4
+//#define OFFSET_COPYOUT                              0xfffffff0071808e8
+//#define OFFSET_IPC_PORT_ALLOC_SPECIAL               0xfffffff007099e94 /* convert_task_suspension_token_to_port */
+//#define OFFSET_IPC_KOBJECT_SET                      0xfffffff0070ad16c /* convert_task_suspension_token_to_port */
+//#define OFFSET_IPC_PORT_MAKE_SEND                   0xfffffff0070999b8 /* "ipc_host_init" */
+//#define OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         0xfffffff006e7c9f8 // + 0x1030
+//#define OFFSET_ROP_ADD_X0_X0_0x10                   0xfffffff0064b1398
+
+// iPhone 7 (iPhone9,3) 10.3.1
+#define OFFSET_ZONE_MAP                             0xfffffff007590478 /* "zone_init: kmem_suballoc failed" */
+#define OFFSET_KERNEL_MAP                           0xfffffff0075ec050
+#define OFFSET_KERNEL_TASK                          0xfffffff0075ec048
+#define OFFSET_REALHOST                             0xfffffff007572ba0 /* host_priv_self */
+#define OFFSET_BZERO                                0xfffffff0070c1f80
+#define OFFSET_BCOPY                                0xfffffff0070c1dc0
+#define OFFSET_COPYIN                               0xfffffff0071c6134
+#define OFFSET_COPYOUT                              0xfffffff0071c6414
+#define OFFSET_IPC_PORT_ALLOC_SPECIAL               0xfffffff0070df05c /* convert_task_suspension_token_to_port */
+#define OFFSET_IPC_KOBJECT_SET                      0xfffffff0070f22b4 /* convert_task_suspension_token_to_port */
+#define OFFSET_IPC_PORT_MAKE_SEND                   0xfffffff0070deb80 /* "ipc_host_init" */
+#define OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         0xfffffff006e4a238 // + 0x1030
+#define OFFSET_ROP_ADD_X0_X0_0x10                   0xfffffff0064ff0a8
 
 #define KPTR_ALIGN(addr) (((addr) + sizeof(kptr_t) - 1) & ~(sizeof(kptr_t) - 1))
 

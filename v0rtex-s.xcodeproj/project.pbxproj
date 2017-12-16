@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B58B32401FE4EBA300EB7B47 /* kernel.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B323D1FE4EBA300EB7B47 /* kernel.m */; };
+		B58B32441FE4ED3B00EB7B47 /* ls in Resources */ = {isa = PBXBuildFile; fileRef = B58B32431FE4ED3B00EB7B47 /* ls */; };
+		B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32451FE4ED6300EB7B47 /* symbols.m */; };
+		B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32481FE4F3DF00EB7B47 /* root-rw.m */; };
 		B5BB8F791FE4D97800B60FDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5BB8F781FE4D97800B60FDC /* README.md */; };
 		EE5169281FDC2A7000805460 /* v0rtex.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5169271FDC2A7000805460 /* v0rtex.m */; };
 		EE5252AE1FDA4F2F00993801 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5252AD1FDA4F2F00993801 /* AppDelegate.m */; };
@@ -19,6 +23,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B58B323D1FE4EBA300EB7B47 /* kernel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = kernel.m; sourceTree = "<group>"; };
+		B58B323F1FE4EBA300EB7B47 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel.h; sourceTree = "<group>"; };
+		B58B32431FE4ED3B00EB7B47 /* ls */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ls; sourceTree = "<group>"; };
+		B58B32451FE4ED6300EB7B47 /* symbols.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = symbols.m; sourceTree = "<group>"; };
+		B58B32471FE4EDCF00EB7B47 /* symbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = symbols.h; sourceTree = "<group>"; };
+		B58B32481FE4F3DF00EB7B47 /* root-rw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "root-rw.m"; sourceTree = "<group>"; };
+		B58B324A1FE4F3F900EB7B47 /* root-rw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "root-rw.h"; sourceTree = "<group>"; };
 		B5BB8F781FE4D97800B60FDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE5169271FDC2A7000805460 /* v0rtex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = v0rtex.m; sourceTree = "<group>"; };
 		EE5169291FDC2C9D00805460 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
@@ -69,6 +80,8 @@
 		EE5252AB1FDA4F2F00993801 /* v0rtex-S */ = {
 			isa = PBXGroup;
 			children = (
+				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
+				B58B32431FE4ED3B00EB7B47 /* ls */,
 				EE5252BB1FDA4F2F00993801 /* main.m */,
 				EE5252AC1FDA4F2F00993801 /* AppDelegate.h */,
 				EE5252AD1FDA4F2F00993801 /* AppDelegate.m */,
@@ -77,7 +90,12 @@
 				EE5169291FDC2C9D00805460 /* common.h */,
 				EE81AD151FDEF1AB0094418B /* v0rtex.h */,
 				EE5169271FDC2A7000805460 /* v0rtex.m */,
-				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
+				B58B323F1FE4EBA300EB7B47 /* kernel.h */,
+				B58B323D1FE4EBA300EB7B47 /* kernel.m */,
+				B58B32451FE4ED6300EB7B47 /* symbols.m */,
+				B58B32471FE4EDCF00EB7B47 /* symbols.h */,
+				B58B32481FE4F3DF00EB7B47 /* root-rw.m */,
+				B58B324A1FE4F3F900EB7B47 /* root-rw.h */,
 			);
 			path = "v0rtex-S";
 			sourceTree = "<group>";
@@ -159,6 +177,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B58B32441FE4ED3B00EB7B47 /* ls in Resources */,
 				EE5252B91FDA4F2F00993801 /* LaunchScreen.storyboard in Resources */,
 				EE5252B61FDA4F2F00993801 /* Assets.xcassets in Resources */,
 				B5BB8F791FE4D97800B60FDC /* README.md in Resources */,
@@ -173,6 +192,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */,
+				B58B32401FE4EBA300EB7B47 /* kernel.m in Sources */,
+				B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */,
 				EE5252B11FDA4F2F00993801 /* ViewController.m in Sources */,
 				EE5252BC1FDA4F2F00993801 /* main.m in Sources */,
 				EE5252AE1FDA4F2F00993801 /* AppDelegate.m in Sources */,

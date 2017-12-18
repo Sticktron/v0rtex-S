@@ -1,6 +1,6 @@
 # v0rtex-S
 
-A very Xcode project for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
+A simple app for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
 
 
 ### Offsets?

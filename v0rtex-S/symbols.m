@@ -18,10 +18,15 @@ uint64_t OFFSET_BZERO;
 uint64_t OFFSET_BCOPY;
 uint64_t OFFSET_COPYIN;
 uint64_t OFFSET_COPYOUT;
+uint64_t OFFSET_CHGPROCCNT;
+uint64_t OFFSET_KAUTH_CRED_REF;
+uint64_t OFFSET_KAUTH_CRED_UNREF;
 uint64_t OFFSET_IPC_PORT_ALLOC_SPECIAL;
 uint64_t OFFSET_IPC_KOBJECT_SET;
 uint64_t OFFSET_IPC_PORT_MAKE_SEND;
 uint64_t OFFSET_IOSURFACEROOTUSERCLIENT_VTAB;
+uint64_t OFFSET_OSSERIALIZER_SERIALIZE;
+uint64_t OFFSET_ROP_LDR_X0_X0_0x10;
 uint64_t OFFSET_ROP_ADD_X0_X0_0x10;
 uint64_t OFFSET_ROOT_MOUNT_V_NODE;
 
@@ -36,7 +41,6 @@ BOOL init_symbols()
     LOG("version: %s", u.version);
     LOG("machine: %s", u.machine);
     
-    
     // iPhone 7 (iPhone9,3) 10.3.1
     if (strcmp(u.version, "Darwin Kernel Version 16.5.0: Thu Feb 23 23:22:55 PST 2017; root:xnu-3789.52.2~7/RELEASE_ARM64_T8010") == 0) {
         OFFSET_ZONE_MAP                             = 0xfffffff007590478;
@@ -47,11 +51,15 @@ BOOL init_symbols()
         OFFSET_BCOPY                                = 0xfffffff0070c1dc0;
         OFFSET_COPYIN                               = 0xfffffff0071c6134;
         OFFSET_COPYOUT                              = 0xfffffff0071c6414;
+        OFFSET_CHGPROCCNT                           = 0xfffffff007049e4b;
+        OFFSET_KAUTH_CRED_REF                       = 0xfffffff0073ada04;
+        OFFSET_KAUTH_CRED_UNREF                     = 0xfffffff0073ad6e4;
         OFFSET_IPC_PORT_ALLOC_SPECIAL               = 0xfffffff0070df05c;
         OFFSET_IPC_KOBJECT_SET                      = 0xfffffff0070f22b4;
         OFFSET_IPC_PORT_MAKE_SEND                   = 0xfffffff0070deb80;
         OFFSET_IOSURFACEROOTUSERCLIENT_VTAB         = 0xfffffff006e4a238;
         OFFSET_ROP_ADD_X0_X0_0x10                   = 0xfffffff0064ff0a8;
+        OFFSET_ROP_LDR_X0_X0_0x10                   = 0xfffffff0074cf02c;
         OFFSET_ROOT_MOUNT_V_NODE                    = 0xfffffff0075ec0b0;
     }
     
@@ -72,6 +80,7 @@ BOOL init_symbols()
         OFFSET_ROP_ADD_X0_X0_0x10                   = 0xfffffff006b916b8;
         OFFSET_ROOT_MOUNT_V_NODE                    = 0xfffffff0075ec0b0;
     }
+    
     else
     {
         LOG("Device not supported.");

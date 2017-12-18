@@ -11,7 +11,16 @@
 		B58B32441FE4ED3B00EB7B47 /* ls in Resources */ = {isa = PBXBuildFile; fileRef = B58B32431FE4ED3B00EB7B47 /* ls */; };
 		B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32451FE4ED6300EB7B47 /* symbols.m */; };
 		B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32481FE4F3DF00EB7B47 /* root-rw.m */; };
+		B58B32581FE5237000EB7B47 /* libjb-oldver.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B58B32571FE5237000EB7B47 /* libjb-oldver.a */; };
+		B58B325B1FE525A300EB7B47 /* dropbear in Resources */ = {isa = PBXBuildFile; fileRef = B58B32591FE525A300EB7B47 /* dropbear */; };
+		B58B325C1FE525A300EB7B47 /* dropbear.plist in Resources */ = {isa = PBXBuildFile; fileRef = B58B325A1FE525A300EB7B47 /* dropbear.plist */; };
+		B58B32641FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist in Resources */ = {isa = PBXBuildFile; fileRef = B58B32631FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist */; };
 		B5BB8F791FE4D97800B60FDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5BB8F781FE4D97800B60FDC /* README.md */; };
+		B5E66A511FE6D8A800C7530E /* patchfinder64.c in Sources */ = {isa = PBXBuildFile; fileRef = B5E66A501FE6D8A800C7530E /* patchfinder64.c */; };
+		B5E66A541FE7170600C7530E /* launchctl in Resources */ = {isa = PBXBuildFile; fileRef = B5E66A531FE7170600C7530E /* launchctl */; };
+		B5E66A561FE7186500C7530E /* libjb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5E66A551FE7186500C7530E /* libjb.a */; };
+		B5E66A581FE71E0900C7530E /* test_fsigned in Resources */ = {isa = PBXBuildFile; fileRef = B5E66A571FE71E0900C7530E /* test_fsigned */; };
+		B5E66A5A1FE824FD00C7530E /* tar in Resources */ = {isa = PBXBuildFile; fileRef = B5E66A591FE824FD00C7530E /* tar */; };
 		EE5169281FDC2A7000805460 /* v0rtex.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5169271FDC2A7000805460 /* v0rtex.m */; };
 		EE5252AE1FDA4F2F00993801 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5252AD1FDA4F2F00993801 /* AppDelegate.m */; };
 		EE5252B11FDA4F2F00993801 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5252B01FDA4F2F00993801 /* ViewController.m */; };
@@ -30,7 +39,18 @@
 		B58B32471FE4EDCF00EB7B47 /* symbols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = symbols.h; sourceTree = "<group>"; };
 		B58B32481FE4F3DF00EB7B47 /* root-rw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "root-rw.m"; sourceTree = "<group>"; };
 		B58B324A1FE4F3F900EB7B47 /* root-rw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "root-rw.h"; sourceTree = "<group>"; };
+		B58B32561FE5237000EB7B47 /* libjb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libjb.h; sourceTree = "<group>"; };
+		B58B32571FE5237000EB7B47 /* libjb-oldver.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libjb-oldver.a"; sourceTree = "<group>"; };
+		B58B32591FE525A300EB7B47 /* dropbear */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dropbear; sourceTree = "<group>"; };
+		B58B325A1FE525A300EB7B47 /* dropbear.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = dropbear.plist; sourceTree = "<group>"; };
+		B58B32631FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.apple.iokit.IOMobileGraphicsFamily.plist; sourceTree = "<group>"; };
 		B5BB8F781FE4D97800B60FDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B5E66A4F1FE6D8A700C7530E /* patchfinder64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchfinder64.h; sourceTree = "<group>"; };
+		B5E66A501FE6D8A800C7530E /* patchfinder64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = patchfinder64.c; sourceTree = "<group>"; };
+		B5E66A531FE7170600C7530E /* launchctl */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = launchctl; sourceTree = "<group>"; };
+		B5E66A551FE7186500C7530E /* libjb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjb.a; sourceTree = "<group>"; };
+		B5E66A571FE71E0900C7530E /* test_fsigned */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = test_fsigned; sourceTree = "<group>"; };
+		B5E66A591FE824FD00C7530E /* tar */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = tar; sourceTree = "<group>"; };
 		EE5169271FDC2A7000805460 /* v0rtex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = v0rtex.m; sourceTree = "<group>"; };
 		EE5169291FDC2C9D00805460 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		EE5252A91FDA4F2F00993801 /* v0rtex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = v0rtex.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,6 +73,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE665E261FDC013D00FF457E /* IOKit.framework in Frameworks */,
+				B58B32581FE5237000EB7B47 /* libjb-oldver.a in Frameworks */,
+				B5E66A561FE7186500C7530E /* libjb.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +103,13 @@
 			isa = PBXGroup;
 			children = (
 				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
+				B5E66A531FE7170600C7530E /* launchctl */,
+				B58B32631FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist */,
 				B58B32431FE4ED3B00EB7B47 /* ls */,
+				B58B32591FE525A300EB7B47 /* dropbear */,
+				B58B325A1FE525A300EB7B47 /* dropbear.plist */,
+				B5E66A571FE71E0900C7530E /* test_fsigned */,
+				B5E66A591FE824FD00C7530E /* tar */,
 				EE5252BB1FDA4F2F00993801 /* main.m */,
 				EE5252AC1FDA4F2F00993801 /* AppDelegate.h */,
 				EE5252AD1FDA4F2F00993801 /* AppDelegate.m */,
@@ -96,6 +124,11 @@
 				B58B32471FE4EDCF00EB7B47 /* symbols.h */,
 				B58B32481FE4F3DF00EB7B47 /* root-rw.m */,
 				B58B324A1FE4F3F900EB7B47 /* root-rw.h */,
+				B58B32571FE5237000EB7B47 /* libjb-oldver.a */,
+				B5E66A551FE7186500C7530E /* libjb.a */,
+				B58B32561FE5237000EB7B47 /* libjb.h */,
+				B5E66A501FE6D8A800C7530E /* patchfinder64.c */,
+				B5E66A4F1FE6D8A700C7530E /* patchfinder64.h */,
 			);
 			path = "v0rtex-S";
 			sourceTree = "<group>";
@@ -178,10 +211,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				B58B32441FE4ED3B00EB7B47 /* ls in Resources */,
+				B5E66A581FE71E0900C7530E /* test_fsigned in Resources */,
 				EE5252B91FDA4F2F00993801 /* LaunchScreen.storyboard in Resources */,
+				B5E66A541FE7170600C7530E /* launchctl in Resources */,
+				B5E66A5A1FE824FD00C7530E /* tar in Resources */,
 				EE5252B61FDA4F2F00993801 /* Assets.xcassets in Resources */,
 				B5BB8F791FE4D97800B60FDC /* README.md in Resources */,
+				B58B32641FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist in Resources */,
 				EE5252B41FDA4F2F00993801 /* Main.storyboard in Resources */,
+				B58B325C1FE525A300EB7B47 /* dropbear.plist in Resources */,
+				B58B325B1FE525A300EB7B47 /* dropbear in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +233,7 @@
 			files = (
 				B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */,
 				B58B32401FE4EBA300EB7B47 /* kernel.m in Sources */,
+				B5E66A511FE6D8A800C7530E /* patchfinder64.c in Sources */,
 				B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */,
 				EE5252B11FDA4F2F00993801 /* ViewController.m in Sources */,
 				EE5252BC1FDA4F2F00993801 /* main.m in Sources */,
@@ -333,32 +373,48 @@
 		EE5252C01FDA4F2F00993801 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6EKJWC698P;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/v0rtex-S",
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sticktron.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Debug;
 		};
 		EE5252C11FDA4F2F00993801 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6EKJWC698P;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/v0rtex-S",
+				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sticktron.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7s armv7";
 			};
 			name = Release;
 		};

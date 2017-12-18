@@ -9,6 +9,32 @@
 #include "kernel.h"
 #include <mach/mach.h>
 
+task_t task;
+
+void init_tfp0_kernel(task_t tfp0) {
+    task = tfp0;
+}
+
+size_t tfp0_kread(uint64_t where, void *p, size_t size)
+{
+    int rv;
+    size_t offset = 0;
+    while (offset < size) {
+        mach_vm_size_t sz, chunk = 2048;
+        if (chunk > size - offset) {
+            chunk = size - offset;
+        }
+        rv = mach_vm_read_overwrite(task, where + offset, chunk, (mach_vm_address_t)p + offset, &sz);
+        
+        if (rv || sz == 0) {
+            break;
+        }
+        
+        offset += sz;
+    }
+    return offset;
+}
+
 uint64_t rk64(task_t tfp0, uint64_t kaddr) {
     uint64_t lower = rk32_via_tfp0(tfp0, kaddr);
     uint64_t higher = rk32_via_tfp0(tfp0, kaddr + 4);
@@ -48,7 +74,7 @@ uint32_t rk32_via_tfp0(task_t tfp0, uint64_t kaddr) {
     return val;
 }
 
-void wk32(task_t tfp0, uint64_t kaddr, uint32_t val) {
+void wk32(task_t tfp0, uint64_t kaddr, void *val) {
     if (tfp0 == MACH_PORT_NULL) {
         // printf("attempt to write to kernel memory before any kernel memory write primitives available\n");
         // sleep(3);

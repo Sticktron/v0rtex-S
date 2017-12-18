@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <string.h>
+#include "kernel.h"
 
 typedef unsigned long long addr_t;
 
@@ -423,6 +424,8 @@ follow_cbz(const uint8_t *buf, addr_t cbz)
 size_t kread(uint64_t where, void *p, size_t size);
 #endif
 
+static task_t tfp0;
+
 static uint8_t *kernel = NULL;
 static size_t kernel_size = 0;
 
@@ -440,8 +443,10 @@ static void *kernel_mh = 0;
 static addr_t kernel_delta = 0;
 
 int
-init_kernel(addr_t base, const char *filename)
+init_kernel(task_t taskfp0, addr_t base, const char *filename)
 {
+    tfp0 = taskfp0;
+    
     size_t rv;
     uint8_t buf[0x4000];
     unsigned i, j;
@@ -450,28 +455,36 @@ init_kernel(addr_t base, const char *filename)
     addr_t min = -1;
     addr_t max = 0;
     int is64 = 0;
+    
+    init_tfp0_kernel(taskfp0);
 
 #ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #define close(f)
-    rv = kread(base, buf, sizeof(buf));
+    rv = tfp0_kread(base, buf, sizeof(buf));
     if (rv != sizeof(buf)) {
+        printf("failed kread, got size: %zu \n", rv);
         return -1;
     }
 #else	/* __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ */
+    printf("this code right here has run ............. \n");
     int fd = open(filename, O_RDONLY);
     if (fd < 0) {
+        printf("failed at open, got fd: %s \n", fd);
         return -1;
     }
 
-    rv = read(fd, buf, sizeof(buf));
+    rv = rk32_via_tfp0(tfp0, fd);
+    //rv = read(fd, buf, sizeof(buf));
     if (rv != sizeof(buf)) {
         close(fd);
+        printf("failed at buf read, got rv: %d \n", rv);
         return -1;
     }
 #endif	/* __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ */
 
     if (!MACHO(buf)) {
         close(fd);
+        printf("failed macho, buf: %s \n", buf);
         return -1;
     }
 
@@ -545,11 +558,15 @@ init_kernel(addr_t base, const char *filename)
 #ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
     kernel = malloc(kernel_size);
     if (!kernel) {
+        printf("failed to malloc kern \n");
         return -1;
     }
-    rv = kread(kerndumpbase, kernel, kernel_size);
+    
+    rv = tfp0_kread(kerndumpbase, kernel, kernel_size);
+    // rv = kread(kerndumpbase, kernel, kernel_size);
     if (rv != kernel_size) {
         free(kernel);
+        printf("failed to kread kern, rv: %zu \n", rv);
         return -1;
     }
 
@@ -561,6 +578,7 @@ init_kernel(addr_t base, const char *filename)
     kernel = calloc(1, kernel_size);
     if (!kernel) {
         close(fd);
+        printf("failed to calloc kern, kernel: %d \n", kernel);
         return -1;
     }
 
@@ -573,6 +591,7 @@ init_kernel(addr_t base, const char *filename)
             if (sz != seg->filesize) {
                 close(fd);
                 free(kernel);
+                printf("sz != seg->filesize, sz: %zu", sz);
                 return -1;
             }
             if (!kernel_mh) {
@@ -920,25 +939,86 @@ find_sysbootnonce(void)
     return 0;
 }
 
-addr_t
-find_trustcache(void)
-{
-    addr_t cbz, call, func, val;
-    addr_t ref = find_strref("amfi_prevent_old_entitled_platform_binaries", 1, 1);
+uint64_t find_copyout(void) {
+    // Find the first reference to the string
+    addr_t ref = find_strref("\"%s(%p, %p, %lu) - transfer too large\"", 2, 0);
     if (!ref) {
         return 0;
     }
     ref -= kerndumpbase;
-    cbz = step64(kernel, ref, 32, INSN_CBZ);
-    if (!cbz) {
+    
+    uint64_t start = 0;
+    for (int i = 4; i < 0x100*4; i+=4) {
+        uint32_t op = *(uint32_t*)(kernel+ref-i);
+        if (op == 0xd10143ff) { // SUB SP, SP, #0x50
+            start = ref-i;
+            break;
+        }
+    }
+    if (!start) {
         return 0;
     }
-    call = step64(kernel, follow_cbz(kernel, cbz), 4, INSN_CALL);
+    
+    return start + kerndumpbase;
+}
+
+uint64_t find_bzero(void) {
+    // Just find SYS #3, c7, c4, #1, X3, then get the start of that function
+    addr_t off;
+    uint32_t *k;
+    k = (uint32_t *)(kernel + xnucore_base);
+    for (off = 0; off < xnucore_size - 4; off += 4, k++) {
+        if (k[0] == 0xd50b7423) {
+            off += xnucore_base;
+            break;
+        }
+    }
+    
+    uint64_t start = bof64(kernel, xnucore_base, off);
+    if (!start) {
+        return 0;
+    }
+    
+    return start + kerndumpbase;
+}
+
+addr_t find_bcopy(void) {
+    // Jumps straight into memmove after switching x0 and x1 around
+    // Guess we just find the switch and that's it
+    addr_t off;
+    uint32_t *k;
+    k = (uint32_t *)(kernel + xnucore_base);
+    for (off = 0; off < xnucore_size - 4; off += 4, k++) {
+        if (k[0] == 0xAA0003E3 && k[1] == 0xAA0103E0 && k[2] == 0xAA0303E1 && k[3] == 0xd503201F) {
+            return off + xnucore_base + kerndumpbase;
+        }
+    }
+    k = (uint32_t *)(kernel + prelink_base);
+    for (off = 0; off < prelink_size - 4; off += 4, k++) {
+        if (k[0] == 0xAA0003E3 && k[1] == 0xAA0103E0 && k[2] == 0xAA0303E1 && k[3] == 0xd503201F) {
+            return off + prelink_base + kerndumpbase;
+        }
+    }
+    return 0;
+}
+
+addr_t find_trustcache(void) {
+    addr_t call, func, val;
+    addr_t ref = find_strref("com.apple.MobileFileIntegrity", 1, 1);
+    if (!ref) {
+        printf("didnt find string ref\n");
+        return 0;
+    }
+    ref -= kerndumpbase;
+    call = step64(kernel, ref, 32, INSN_CALL);
     if (!call) {
+        printf("couldn't find the call\n");
         return 0;
     }
+    call = step64(kernel, call+4, 32, INSN_CALL);
     func = follow_call64(kernel, call);
     if (!func) {
+        printf("couldn't follow the call\n");
         return 0;
     }
     val = calc64(kernel, func, func + 16, 8);
@@ -948,33 +1028,33 @@ find_trustcache(void)
     return val + kerndumpbase;
 }
 
-addr_t
-find_amficache(void)
-{
-    addr_t cbz, call, func, bof, val;
-    addr_t ref = find_strref("amfi_prevent_old_entitled_platform_binaries", 1, 1);
+addr_t find_amficache(void) {
+    addr_t call, func, bof, val;
+    addr_t ref = find_strref("com.apple.MobileFileIntegrity", 1, 1);
     if (!ref) {
+        printf("didnt find string ref\n");
         return 0;
     }
     ref -= kerndumpbase;
-    cbz = step64(kernel, ref, 32, INSN_CBZ);
-    if (!cbz) {
-        return 0;
-    }
-    call = step64(kernel, follow_cbz(kernel, cbz), 4, INSN_CALL);
+    call = step64(kernel, ref, 32, INSN_CALL);
     if (!call) {
+        printf("couldn't find the call\n");
         return 0;
     }
+    call = step64(kernel, call+4, 32, INSN_CALL);
     func = follow_call64(kernel, call);
     if (!func) {
+        printf("couldn't follow the call\n");
         return 0;
     }
     bof = bof64(kernel, func - 256, func);
     if (!bof) {
+        printf("couldn't find the start of the function\n");
         return 0;
     }
     val = calc64(kernel, bof, func, 9);
     if (!val) {
+        printf("couldn't find x9\n");
         return 0;
     }
     return val + kerndumpbase;

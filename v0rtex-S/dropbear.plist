@@ -5,10 +5,10 @@
 	<key>Label</key>
 	<string>ShaiHulud</string>
 	<key>Program</key>
-	<string>/var/dropbear</string>
+	<string>/var/v0rtex_test/dropbear</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/var/dropbear</string>
+		<string>/var/v0rtex_test/dropbear</string>
 		<string>-F</string>
 		<string>-R</string>
 		<string>-p</string>

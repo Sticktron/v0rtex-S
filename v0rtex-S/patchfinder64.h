@@ -1,7 +1,7 @@
 #ifndef PATCHFINDER64_H_
 #define PATCHFINDER64_H_
 
-int init_kernel(uint64_t base, const char *filename);
+int init_kernel(task_t tfp0, uint64_t base, const char *filename);
 void term_kernel(void);
 
 enum { SearchInCore, SearchInPrelink };
@@ -27,5 +27,7 @@ uint64_t find_amfiops(void);
 uint64_t find_sysbootnonce(void);
 uint64_t find_trustcache(void);
 uint64_t find_amficache(void);
+
+uint64_t find_copyout(void);
 
 #endif

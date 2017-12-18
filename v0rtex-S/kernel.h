@@ -11,9 +11,9 @@
 void init_tfp0_kernel(task_t tfp0);
 size_t tfp0_kread(uint64_t where, void *p, size_t size);
 uint64_t rk64(task_t tfp0, uint64_t kaddr);
-uint32_t rk32_via_tfp0(task_t tfp0, uint64_t kaddr);
-//void wk32(task_t tfp0, uint64_t kaddr, uint32_t val);
-void wk32(task_t tfp0, uint64_t kaddr, void *val);
+uint32_t rk32(task_t tfp0, uint64_t kaddr);
+void wk64(task_t tfp0, uint64_t kaddr, uint64_t val);
+void wk32(task_t tfp0, uint64_t kaddr, uint32_t val);
 
 kern_return_t mach_vm_write(
                             vm_map_t target_task,

@@ -16,16 +16,15 @@ To find your own offsets read [this guide](https://gist.github.com/uroboro/5b2b2
 
 You may also need to find the OFFSET_ROOT_MOUNT_V_NODE offset, which was added with the root r/w capability. To find the offset, first get a decrypted version of your kerelcache. Then use the following command:
 
-```nm <kernelcache> | grep _rootvnode```
+```nm <kernelcache> | grep -E " _rootvnode$"```
 
 Example output:
 
 ```Bens-MBP:i71031Original Ben$ nm kernelcache | grep _rootvnode
 fffffff0075ec0b0 S _rootvnode
-fffffff007217f10 S _vfs_rootvnode
 ```
 
-You want the first address, 'fffffff0075ec0b0', but make sure to add a '0x' to the start, before using it.
+Make sure to add a '0x' to the start of the address too:
 
 `0xfffffff0075ec0b0`
 

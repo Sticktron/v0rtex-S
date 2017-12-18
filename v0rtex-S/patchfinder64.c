@@ -1094,8 +1094,7 @@ find_AGXCommandQueue_vtable(void)
     return val + kerndumpbase;
 }
 
-addr_t
-find_allproc(void)
+addr_t find_allproc(void)
 {
     addr_t val, bof, str8;
     addr_t ref = find_strref("\"pgrp_add : pgrp is dead adding process\"", 1, 0);
@@ -1198,6 +1197,7 @@ find_symbol(const char *symbol)
 
 /* test **********************************************************************/
 
+/*
 int
 main(int argc, char **argv)
 {
@@ -1226,6 +1226,6 @@ main(int argc, char **argv)
 
     term_kernel();
     return 0;
-}
+}*/
 
 #endif	/* HAVE_MAIN */

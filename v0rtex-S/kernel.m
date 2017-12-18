@@ -36,12 +36,12 @@ size_t tfp0_kread(uint64_t where, void *p, size_t size)
 }
 
 uint64_t rk64(task_t tfp0, uint64_t kaddr) {
-    uint64_t lower = rk32_via_tfp0(tfp0, kaddr);
-    uint64_t higher = rk32_via_tfp0(tfp0, kaddr + 4);
+    uint64_t lower = rk32(tfp0, kaddr);
+    uint64_t higher = rk32(tfp0, kaddr + 4);
     return ((higher << 32) | lower);
 }
 
-uint32_t rk32_via_tfp0(task_t tfp0, uint64_t kaddr) {
+uint32_t rk32(task_t tfp0, uint64_t kaddr) {
     kern_return_t err;
     uint32_t val = 0;
     mach_vm_size_t outsize = 0;
@@ -74,7 +74,14 @@ uint32_t rk32_via_tfp0(task_t tfp0, uint64_t kaddr) {
     return val;
 }
 
-void wk32(task_t tfp0, uint64_t kaddr, void *val) {
+void wk64(task_t tfp0, uint64_t kaddr, uint64_t val) {
+    uint32_t lower = (uint32_t)(val & 0xffffffff);
+    uint32_t higher = (uint32_t)(val >> 32);
+    wk32(tfp0, kaddr, lower);
+    wk32(tfp0, kaddr + 4, higher);
+}
+
+void wk32(task_t tfp0, uint64_t kaddr, uint32_t val) {
     if (tfp0 == MACH_PORT_NULL) {
         // printf("attempt to write to kernel memory before any kernel memory write primitives available\n");
         // sleep(3);

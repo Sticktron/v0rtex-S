@@ -70,8 +70,8 @@ ViewController *controller;
         [self log:@"ERROR: exploit failed \n\n"];
         return;
     }
-    [self log:[NSString stringWithFormat:@"SUCESS: got tfp0 -> %x \n", tfp0]];
-    [self log:[NSString stringWithFormat:@"slide = %llx \n", kslide]];
+    [self log:[NSString stringWithFormat:@"got tfp0 -> %x \n", tfp0]];
+    [self log:[NSString stringWithFormat:@"slide: %llx \n", kslide]];
     
     self.sploitButton.enabled = NO;
     

@@ -21,6 +21,11 @@
 
 #include "common.h"
 
+#include "ViewController.h"
+extern id controller;
+#define LOG(str, args...) do { if (controller && [controller respondsToSelector:@selector(log:)]) [controller log:[NSString stringWithFormat:@str "\n", ##args]]; } while(0)
+
+
 #define SIZEOF_TASK                                 0x550
 #define OFFSET_TASK_ITK_SELF                        0xd8
 #define OFFSET_TASK_ITK_REGISTERED                  0x2e8

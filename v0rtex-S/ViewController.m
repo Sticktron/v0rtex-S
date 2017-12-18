@@ -110,35 +110,36 @@ kptr_t kslide;
     int kern = init_kernel(tfp0, kslide + 0xFFFFFFF007004000, NULL);
     printf("init_kernel: %d \n", kern);
     
-    mkdir("/var/v0rtex_test", 0777);
+    mkdir("/v0rtex", 0777);
     [self writeText:@"spawning dropbear"];
     NSFileManager *fileMgr = [NSFileManager defaultManager];
     NSString *bundlePath = [NSString stringWithFormat:@"%s", bundle_path()];
     
-    [fileMgr removeItemAtPath:@"/var/v0rtex_test/dropbear.plist" error:nil];
+    [fileMgr removeItemAtPath:@"/v0rtex/launchctl" error:nil];
+    [fileMgr removeItemAtPath:@"/v0rtex/dropbear" error:nil];
+    [fileMgr removeItemAtPath:@"/v0rtex/dropbear.plist" error:nil];
+    [fileMgr removeItemAtPath:@"/v0rtex/test_fsigned" error:nil];
+    [fileMgr removeItemAtPath:@"/v0rtex/tar" error:nil];
     
-    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/launchctl"] toPath:@"/var/v0rtex_test/launchctl" error:nil];
-    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear"] toPath:@"/var/v0rtex_test/dropbear" error:nil];
-    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear.plist"] toPath:@"/var/v0rtex_test/dropbear.plist" error:nil];
-    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/test_fsigned"] toPath:@"/var/v0rtex_test/test_fsigned" error:nil];
-    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/tar"] toPath:@"/var/v0rtex_test/tar" error:nil];
+    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/launchctl"] toPath:@"/v0rtex/launchctl" error:nil];
+    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear"] toPath:@"/v0rtex/dropbear" error:nil];
+    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear.plist"] toPath:@"/v0rtex/dropbear.plist" error:nil];
+    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/test_fsigned"] toPath:@"/v0rtex/test_fsigned" error:nil];
+    [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/tar"] toPath:@"/v0rtex/tar" error:nil];
     
-    chmod("/var/v0rtex_test", 0777);
-    chmod("/var/v0rtex_test/launchctl", 0777);
-    chmod("/var/v0rtex_test/dropbear", 0777);
-    chmod("/var/v0rtex_test/dropbear.plist", 0777);
-    chmod("/var/v0rtex_test/test_fsigned", 0777);
-    chmod("/var/v0rtex_test/tar", 0777);
+    // chmod("/v0rtex", 0777);
+    chmod("/v0rtex/launchctl", 0777);
+    chmod("/v0rtex/dropbear", 0777);
+    chmod("/v0rtex/dropbear.plist", 0777);
+    chmod("/v0rtex/test_fsigned", 0777);
+    chmod("/v0rtex/tar", 0777);
     
-//    inject_trust("/var/v0rtex_test/tar");
+    do_trust();
     
-    char path[200];
-    strcpy(path, bundle_path());
-    strcat(path, "/tar");
-    printf("full path: %s \n", path);
-    chmod(path, 0777);
-    inject_trust(path);
+    char *path = "/v0rtex/tar";
+    // inject_trust(path);
     int launch1 = execprog(0, path, NULL);
+    // int launch1 = execprog(0, "/v0rtex/launchctl", NULL);
     printf("launchctl %s = %d \n", path, launch1);
     
     // spawn dropbear
@@ -155,10 +156,48 @@ kptr_t kslide;
     self.outputView.text = [self.outputView.text stringByAppendingString:[text stringByAppendingString:@"\n"]];
 }
 
+void do_trust() {
+    uint64_t trust_chain = find_trustcache();
+    uint64_t amficache = find_amficache();
+    
+    term_kernel();
+    
+    printf("trust_chain = 0x%llx \n", trust_chain);
+    
+    struct trust_mem mem;
+    mem.next = rk64(tfp0, trust_chain);
+    *(uint64_t *)&mem.uuid[0] = 0xabadbabeabadbabe;
+    *(uint64_t *)&mem.uuid[8] = 0xabadbabeabadbabe;
+    
+    init_tfp0_kernel(tfp0);
+    int rv = grab_hashes("/v0rtex", tfp0_kread, amficache, mem.next);
+    printf("rv = %d, numhash = %d \n", rv, numhash);
+    
+    size_t length = (sizeof(mem) + numhash * 20 + 0xFFFF) & ~0xFFFF;
+    
+    uint64_t kernel_trust;
+    mach_vm_allocate(tfp0, &kernel_trust, length, VM_FLAGS_ANYWHERE);
+    printf("alloced: 0x%zx => 0x%llx \n", length, kernel_trust);
+    
+    mem.count = numhash;
+    wk32(tfp0, kernel_trust, &mem);
+    wk32(tfp0, kernel_trust + sizeof(mem), allhash);
+    wk64(tfp0, trust_chain, kernel_trust);
+    
+    free(allhash);
+    free(allkern);
+    free(amfitab);
+    
+    printf("[amfi] get fucked \n");
+}
+
+/*
 void inject_trust(const char *path) {
     printf("[amfi] Trusting '%s' \n", path);
     
     uint64_t trust_cache = find_trustcache();
+    uint64_T amfi_cache = find_amficache();
+    printf("trust cache is at %d \n", trust_cache);
     
     typedef char hash_t[20];
     
@@ -176,16 +215,22 @@ void inject_trust(const char *path) {
     *(uint64_t *)&fake_chain.uuid[8] = 0xabadbabeabadbabe;
     fake_chain.count = 1;
     
-    uint8_t *hash = getSHA256(getCodeDirectory(path));
+    uint8_t *codeDir = getCodeDirectory(path);
+    printf("got code dir %hhu \n", *codeDir);
+    
+    uint8_t *hash = getSHA256(codeDir);
+    printf("was given hash %hhu \n", *hash);
+    
     memmove(fake_chain.hash[0], hash, 20);
     free(hash);
     
     uint64_t kernel_trust = 0;
     mach_vm_allocate(tfp0, &kernel_trust, sizeof(fake_chain), VM_FLAGS_ANYWHERE);
+    printf("got pos for kernel_trust: %llu \n", kernel_trust);
     
     wk64(tfp0, kernel_trust, &fake_chain);
     wk64(tfp0, trust_cache, kernel_trust);
-}
+}*/
 
 uint32_t swap_uint32(uint32_t val) {
     val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
@@ -209,7 +254,7 @@ uint8_t *getSHA256(uint8_t* code_dir) {
             code_dir += 4*j;
         }
     }
-    printf("%08x\n", realsize);
+    // printf("%08x\n", realsize);
     
     CC_SHA256(code_dir, realsize, out);
     
@@ -237,6 +282,8 @@ uint8_t *getCodeDirectory(const char* name) {
           uint8_t *cd = malloc(size_cs);
           fseek(fd, off_cs, SEEK_SET);
           fread(cd, size_cs, 1, fd);
+          
+          printf("[getCodeDirectory] cd value %hhu \n", *cd);
           return cd;
       } else {
           printf("%02x\n", cmd.cmd);
@@ -277,17 +324,19 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
         return rv;
     }
     
+    printf("calling posix_spawn... \n");
     pid_t pd;
     if ((rv = posix_spawn(&pd, prog, &child_fd_actions, NULL, (char**)args, NULL))) {
         printf("posix_spawn error: %d (%s)\n", rv, strerror(rv));
         return rv;
     }
+    printf("posix_spawn called. \n");
     
-    #define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
-    #define CS_INSTALLER            0x0000008    /* has installer entitlement      */
-    #define CS_HARD                 0x0000100    /* don't load invalid pages       */
-    #define CS_RESTRICT             0x0000800    /* tell dyld to treat restricted  */
-    #define CS_PLATFORM_BINARY      0x4000000    /* this is a platform binary      */
+//    #define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
+//    #define CS_INSTALLER            0x0000008    /* has installer entitlement      */
+//    #define CS_HARD                 0x0000100    /* don't load invalid pages       */
+//    #define CS_RESTRICT             0x0000800    /* tell dyld to treat restricted  */
+//    #define CS_PLATFORM_BINARY      0x4000000    /* this is a platform binary      */
     
     /*
      1. read 8 bytes from proc+0x100 into self_ucred
@@ -295,42 +344,42 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
      3. write 12 zeros to self_ucred + 0x18
      */
     
-    if (kern_ucred != 0) {
-        int tries = 3;
-        while (tries-- > 0) {
-            sleep(1);
-            //uint64_t proc = rk64(tfp0, find_allproc());
-            uint64_t proc;
-            while (proc) {
-                uint32_t pid = rk32(tfp0, proc + 0x10);
-                if (pid == pd) {
-                    uint32_t csflags = rk32(tfp0, proc + 0x2a8);
-                    csflags = (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT  | CS_HARD);
-                    wk32(tfp0, proc + 0x2a8, csflags);
-                    printf("empower\n");
-                    tries = 0;
-                    
-                    uint64_t self_ucred = rk32(tfp0, proc + 0x100);
-                    
-                    uint64_t selfcred_temp = rk32(tfp0, kern_ucred + 0x78);
-                    wk32(tfp0, self_ucred + 0x78, selfcred_temp);
-                    
-                    for (int i = 0; i < 12; i++) {
-                        wk32(tfp0, self_ucred + 0x18 + (i * sizeof(uint32_t)), 0);
-                    }
-                    
-                    printf("gave elevated perms to pid %d \n", pid);
-                    
-                    // original stuff, rewritten above using v0rtex stuff
-                    // kcall(find_copyout(), 3, proc+0x100, &self_ucred, sizeof(self_ucred));
-                    // kcall(find_bcopy(), 3, kern_ucred + 0x78, self_ucred + 0x78, sizeof(uint64_t));
-                    // kcall(find_bzero(), 2, self_ucred + 0x18, 12);
-                    break;
-                }
-                proc = rk64(tfp0, proc);
-            }
-        }
-    }
+//    if (kern_ucred != 0) {
+//        int tries = 3;
+//        while (tries-- > 0) {
+//            sleep(1);
+//            //uint64_t proc = rk64(tfp0, find_allproc());
+//            uint64_t proc;
+//            while (proc) {
+//                uint32_t pid = rk32(tfp0, proc + 0x10);
+//                if (pid == pd) {
+//                    uint32_t csflags = rk32(tfp0, proc + 0x2a8);
+//                    csflags = (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT  | CS_HARD);
+//                    wk32(tfp0, proc + 0x2a8, csflags);
+//                    printf("empower\n");
+//                    tries = 0;
+//
+//                    uint64_t self_ucred = rk32(tfp0, proc + 0x100);
+//
+//                    uint64_t selfcred_temp = rk32(tfp0, kern_ucred + 0x78);
+//                    wk32(tfp0, self_ucred + 0x78, selfcred_temp);
+//
+//                    for (int i = 0; i < 12; i++) {
+//                        wk32(tfp0, self_ucred + 0x18 + (i * sizeof(uint32_t)), 0);
+//                    }
+//
+//                    printf("gave elevated perms to pid %d \n", pid);
+//
+//                    // original stuff, rewritten above using v0rtex stuff
+//                    // kcall(find_copyout(), 3, proc+0x100, &self_ucred, sizeof(self_ucred));
+//                    // kcall(find_bcopy(), 3, kern_ucred + 0x78, self_ucred + 0x78, sizeof(uint64_t));
+//                    // kcall(find_bzero(), 2, self_ucred + 0x18, 12);
+//                    break;
+//                }
+//                proc = rk64(tfp0, proc);
+//            }
+//        }
+//    }
     
     int status;
     waitpid(pd, &status, 0);

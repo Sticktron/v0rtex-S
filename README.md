@@ -1,6 +1,6 @@
 # v0rtex-S
 
-A very basic App for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
+A simple app for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
 
 
 ### Offsets?
@@ -12,4 +12,8 @@ To find your own offsets read [this guide](https://gist.github.com/uroboro/5b2b2
 
 ### Requirements
 
-Xcode and a device running iOS 10.
+Xcode, device on iOS 10.
+
+
+### Screenshot
+<img width="375" src="screenshot.png" alt="Screenshot"/>

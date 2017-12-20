@@ -1,6 +1,9 @@
 #ifndef libjb_h_included
 #define libjb_h_included
 
+#import "common.h"
+#import <sys/time.h>
+
 /* mount ********************************************************************/
 
 struct hfs_mount_args {

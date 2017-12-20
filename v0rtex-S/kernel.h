@@ -14,15 +14,15 @@ uint64_t rk64(task_t tfp0, uint64_t kaddr);
 uint32_t rk32(task_t tfp0, uint64_t kaddr);
 void wk64(task_t tfp0, uint64_t kaddr, uint64_t val);
 void wk32(task_t tfp0, uint64_t kaddr, uint32_t val);
+size_t kwrite(task_t tfp0, uint64_t where, const void *p, size_t size);
+size_t kwrite_uint64(task_t tfp0, uint64_t where, uint64_t value);
 
-kern_return_t mach_vm_write(
-                            vm_map_t target_task,
+kern_return_t mach_vm_write(vm_map_t target_task,
                             mach_vm_address_t address,
                             vm_offset_t data,
                             mach_msg_type_number_t dataCnt);
 
-kern_return_t mach_vm_read_overwrite(
-                                     vm_map_t target_task,
+kern_return_t mach_vm_read_overwrite(vm_map_t target_task,
                                      mach_vm_address_t address,
                                      mach_vm_size_t size,
                                      mach_vm_address_t data,

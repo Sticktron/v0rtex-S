@@ -1,7 +1,10 @@
 #ifndef PATCHFINDER64_H_
 #define PATCHFINDER64_H_
 
-int init_kernel(task_t tfp0, uint64_t base, const char *filename);
+#import "common.h"
+#import <mach/mach.h>
+
+int init_patchfinder(task_t tfp0, uint64_t base, const char *filename);
 void term_kernel(void);
 
 enum { SearchInCore, SearchInPrelink };

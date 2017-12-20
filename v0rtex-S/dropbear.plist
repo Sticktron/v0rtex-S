@@ -5,14 +5,14 @@
 	<key>Label</key>
 	<string>ShaiHulud</string>
 	<key>Program</key>
-	<string>/var/v0rtex_test/dropbear</string>
+	<string>/v0rtex/dropbear</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/var/v0rtex_test/dropbear</string>
-		<string>-F</string>
+		<string>/v0rtex/dropbear</string>
 		<string>-R</string>
-		<string>-p</string>
-		<string>127.0.0.1:22</string>
+		<string>-E</string>
+		<string>-m</string>
+		<string>-F</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

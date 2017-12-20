@@ -443,7 +443,7 @@ static void *kernel_mh = 0;
 static addr_t kernel_delta = 0;
 
 int
-init_kernel(task_t taskfp0, addr_t base, const char *filename)
+init_patchfinder(task_t taskfp0, addr_t base, const char *filename)
 {
     tfp0 = taskfp0;
     
@@ -1060,7 +1060,7 @@ addr_t find_amficache(void) {
     return val + kerndumpbase;
 }
 
-#ifdef HAVE_MAIN
+// #ifdef HAVE_MAIN
 
 /* extra_recipe **************************************************************/
 
@@ -1094,7 +1094,8 @@ find_AGXCommandQueue_vtable(void)
     return val + kerndumpbase;
 }
 
-addr_t find_allproc(void)
+addr_t
+find_allproc(void)
 {
     addr_t val, bof, str8;
     addr_t ref = find_strref("\"pgrp_add : pgrp is dead adding process\"", 1, 0);
@@ -1228,4 +1229,4 @@ main(int argc, char **argv)
     return 0;
 }*/
 
-#endif	/* HAVE_MAIN */
+// #endif	/* HAVE_MAIN */

@@ -11,13 +11,13 @@
 		B58B32441FE4ED3B00EB7B47 /* ls in Resources */ = {isa = PBXBuildFile; fileRef = B58B32431FE4ED3B00EB7B47 /* ls */; };
 		B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32451FE4ED6300EB7B47 /* symbols.m */; };
 		B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32481FE4F3DF00EB7B47 /* root-rw.m */; };
-		B58B325B1FE525A300EB7B47 /* dropbear in Resources */ = {isa = PBXBuildFile; fileRef = B58B32591FE525A300EB7B47 /* dropbear */; };
 		B58B325C1FE525A300EB7B47 /* dropbear.plist in Resources */ = {isa = PBXBuildFile; fileRef = B58B325A1FE525A300EB7B47 /* dropbear.plist */; };
-		B58B32641FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist in Resources */ = {isa = PBXBuildFile; fileRef = B58B32631FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist */; };
 		B5BB8F791FE4D97800B60FDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5BB8F781FE4D97800B60FDC /* README.md */; };
+		B5C5C5CD1FE9A9A60022D2EC /* dropbear in Resources */ = {isa = PBXBuildFile; fileRef = B5C5C5CC1FE9A9A60022D2EC /* dropbear */; };
+		B5C5C5D31FE9C51A0022D2EC /* amfi.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C5C5D21FE9C51A0022D2EC /* amfi.m */; };
+		B5C5C5D61FE9DADC0022D2EC /* bash in Resources */ = {isa = PBXBuildFile; fileRef = B5C5C5D51FE9DADC0022D2EC /* bash */; };
+		B5C5C5DE1FE9EF670022D2EC /* launchctl in Resources */ = {isa = PBXBuildFile; fileRef = B5C5C5DD1FE9EF660022D2EC /* launchctl */; };
 		B5E66A511FE6D8A800C7530E /* patchfinder64.c in Sources */ = {isa = PBXBuildFile; fileRef = B5E66A501FE6D8A800C7530E /* patchfinder64.c */; };
-		B5E66A541FE7170600C7530E /* launchctl in Resources */ = {isa = PBXBuildFile; fileRef = B5E66A531FE7170600C7530E /* launchctl */; };
-		B5E66A581FE71E0900C7530E /* test_fsigned in Resources */ = {isa = PBXBuildFile; fileRef = B5E66A571FE71E0900C7530E /* test_fsigned */; };
 		B5E66A5A1FE824FD00C7530E /* tar in Resources */ = {isa = PBXBuildFile; fileRef = B5E66A591FE824FD00C7530E /* tar */; };
 		B5E66A5C1FE86DD900C7530E /* libjb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5E66A5B1FE86DD900C7530E /* libjb.a */; };
 		EE5169281FDC2A7000805460 /* v0rtex.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5169271FDC2A7000805460 /* v0rtex.m */; };
@@ -39,14 +39,15 @@
 		B58B32481FE4F3DF00EB7B47 /* root-rw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "root-rw.m"; sourceTree = "<group>"; };
 		B58B324A1FE4F3F900EB7B47 /* root-rw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "root-rw.h"; sourceTree = "<group>"; };
 		B58B32561FE5237000EB7B47 /* libjb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libjb.h; sourceTree = "<group>"; };
-		B58B32591FE525A300EB7B47 /* dropbear */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dropbear; sourceTree = "<group>"; };
 		B58B325A1FE525A300EB7B47 /* dropbear.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = dropbear.plist; sourceTree = "<group>"; };
-		B58B32631FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.apple.iokit.IOMobileGraphicsFamily.plist; sourceTree = "<group>"; };
 		B5BB8F781FE4D97800B60FDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B5C5C5CC1FE9A9A60022D2EC /* dropbear */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dropbear; sourceTree = "<group>"; };
+		B5C5C5D21FE9C51A0022D2EC /* amfi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = amfi.m; sourceTree = "<group>"; };
+		B5C5C5D41FE9C8CC0022D2EC /* amfi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfi.h; sourceTree = "<group>"; };
+		B5C5C5D51FE9DADC0022D2EC /* bash */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bash; sourceTree = "<group>"; };
+		B5C5C5DD1FE9EF660022D2EC /* launchctl */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = launchctl; sourceTree = "<group>"; };
 		B5E66A4F1FE6D8A700C7530E /* patchfinder64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = patchfinder64.h; sourceTree = "<group>"; };
 		B5E66A501FE6D8A800C7530E /* patchfinder64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = patchfinder64.c; sourceTree = "<group>"; };
-		B5E66A531FE7170600C7530E /* launchctl */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = launchctl; sourceTree = "<group>"; };
-		B5E66A571FE71E0900C7530E /* test_fsigned */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = test_fsigned; sourceTree = "<group>"; };
 		B5E66A591FE824FD00C7530E /* tar */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = tar; sourceTree = "<group>"; };
 		B5E66A5B1FE86DD900C7530E /* libjb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libjb.a; sourceTree = "<group>"; };
 		EE5169271FDC2A7000805460 /* v0rtex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = v0rtex.m; sourceTree = "<group>"; };
@@ -100,12 +101,11 @@
 			isa = PBXGroup;
 			children = (
 				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
-				B5E66A531FE7170600C7530E /* launchctl */,
-				B58B32631FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist */,
-				B58B32431FE4ED3B00EB7B47 /* ls */,
-				B58B32591FE525A300EB7B47 /* dropbear */,
+				B5C5C5D51FE9DADC0022D2EC /* bash */,
+				B5C5C5CC1FE9A9A60022D2EC /* dropbear */,
 				B58B325A1FE525A300EB7B47 /* dropbear.plist */,
-				B5E66A571FE71E0900C7530E /* test_fsigned */,
+				B5C5C5DD1FE9EF660022D2EC /* launchctl */,
+				B58B32431FE4ED3B00EB7B47 /* ls */,
 				B5E66A591FE824FD00C7530E /* tar */,
 				EE5252BB1FDA4F2F00993801 /* main.m */,
 				EE5252AC1FDA4F2F00993801 /* AppDelegate.h */,
@@ -125,6 +125,8 @@
 				B58B32561FE5237000EB7B47 /* libjb.h */,
 				B5E66A501FE6D8A800C7530E /* patchfinder64.c */,
 				B5E66A4F1FE6D8A700C7530E /* patchfinder64.h */,
+				B5C5C5D21FE9C51A0022D2EC /* amfi.m */,
+				B5C5C5D41FE9C8CC0022D2EC /* amfi.h */,
 			);
 			path = "v0rtex-S";
 			sourceTree = "<group>";
@@ -207,16 +209,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				B58B32441FE4ED3B00EB7B47 /* ls in Resources */,
-				B5E66A581FE71E0900C7530E /* test_fsigned in Resources */,
+				B5C5C5D61FE9DADC0022D2EC /* bash in Resources */,
 				EE5252B91FDA4F2F00993801 /* LaunchScreen.storyboard in Resources */,
-				B5E66A541FE7170600C7530E /* launchctl in Resources */,
+				B5C5C5DE1FE9EF670022D2EC /* launchctl in Resources */,
 				B5E66A5A1FE824FD00C7530E /* tar in Resources */,
 				EE5252B61FDA4F2F00993801 /* Assets.xcassets in Resources */,
 				B5BB8F791FE4D97800B60FDC /* README.md in Resources */,
-				B58B32641FE5DD4700EB7B47 /* com.apple.iokit.IOMobileGraphicsFamily.plist in Resources */,
 				EE5252B41FDA4F2F00993801 /* Main.storyboard in Resources */,
 				B58B325C1FE525A300EB7B47 /* dropbear.plist in Resources */,
-				B58B325B1FE525A300EB7B47 /* dropbear in Resources */,
+				B5C5C5CD1FE9A9A60022D2EC /* dropbear in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5C5C5D31FE9C51A0022D2EC /* amfi.m in Sources */,
 				B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */,
 				B58B32401FE4EBA300EB7B47 /* kernel.m in Sources */,
 				B5E66A511FE6D8A800C7530E /* patchfinder64.c in Sources */,
@@ -375,6 +377,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6EKJWC698P;
 				ENABLE_BITCODE = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -399,6 +402,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6EKJWC698P;
 				ENABLE_BITCODE = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

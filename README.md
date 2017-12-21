@@ -1,6 +1,6 @@
 # v0rtex-S
 
-A work in progress jailbreak, using Sigzua's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
+A work in progress jailbreak, using Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
 
 Currently, we have:
  - r/w kernel access

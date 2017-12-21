@@ -28,7 +28,7 @@ There are a few new offsets you will need to find:
 
 **OFFSET_ROP_LDR_X0_X0_0x10**: Simply search for ```000840f9c0035fd6``` in hex.
 
-**OFFSET_KAUTH_CRED_REF**: This can be found in the symbols table ```nm <kernelcache> | grep kauth_cref_ref```
+**OFFSET_KAUTH_CRED_REF**: This can be found in the symbols table ```nm <kernelcache> | grep kauth_cred_ref```
 
 ### Requirements
 

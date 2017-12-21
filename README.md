@@ -2,7 +2,7 @@
 
 A very basic App for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
 
-This fork also includes r/w access to / (aka disk0s1s1), on top of the previously given r/w access to /var.
+This fork also includes r/w access to / (aka disk0s1s1), on top of the previously given r/w access to /var, along with an AMFI/codesigning patch, and the ability to connect to the device via SSH.
 
 Fat creds to stek on the r/w stuff, and originally xerub too. 
 

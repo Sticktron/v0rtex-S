@@ -20,7 +20,6 @@ uint64_t OFFSET_COPYIN;
 uint64_t OFFSET_COPYOUT;
 uint64_t OFFSET_CHGPROCCNT;
 uint64_t OFFSET_KAUTH_CRED_REF;
-uint64_t OFFSET_KAUTH_CRED_UNREF;
 uint64_t OFFSET_IPC_PORT_ALLOC_SPECIAL;
 uint64_t OFFSET_IPC_KOBJECT_SET;
 uint64_t OFFSET_IPC_PORT_MAKE_SEND;
@@ -57,7 +56,6 @@ BOOL init_symbols()
             OFFSET_COPYOUT                              = 0xfffffff0071c6414;
             OFFSET_CHGPROCCNT                           = 0xfffffff007049e4b;
             OFFSET_KAUTH_CRED_REF                       = 0xfffffff0073ada04;
-            OFFSET_KAUTH_CRED_UNREF                     = 0xfffffff0073ad6e4;
             OFFSET_IPC_PORT_ALLOC_SPECIAL               = 0xfffffff0070df05c;
             OFFSET_IPC_KOBJECT_SET                      = 0xfffffff0070f22b4;
             OFFSET_IPC_PORT_MAKE_SEND                   = 0xfffffff0070deb80;

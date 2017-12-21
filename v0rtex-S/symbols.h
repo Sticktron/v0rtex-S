@@ -22,7 +22,6 @@ extern uint64_t OFFSET_COPYIN;
 extern uint64_t OFFSET_COPYOUT;
 extern uint64_t OFFSET_CHGPROCCNT;
 extern uint64_t OFFSET_KAUTH_CRED_REF;
-extern uint64_t OFFSET_KAUTH_CRED_UNREF;
 extern uint64_t OFFSET_IPC_PORT_ALLOC_SPECIAL;
 extern uint64_t OFFSET_IPC_KOBJECT_SET;
 extern uint64_t OFFSET_IPC_PORT_MAKE_SEND;

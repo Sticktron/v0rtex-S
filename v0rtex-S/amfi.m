@@ -32,30 +32,27 @@ void init_amfi(task_t task_for_port0) {
 // creds to xerub for grab_hashes (and ty for libjb update!)
 void trust_files(const char *path) {
     struct trust_mem mem;
-    mem.next = rk64(tfp0, trust_cache);
+    mem.next = rk64(trust_cache);
     *(uint64_t *)&mem.uuid[0] = 0xabadbabeabadbabe;
     *(uint64_t *)&mem.uuid[8] = 0xabadbabeabadbabe;
     
-    init_tfp0_kernel(tfp0);
-    int rv = grab_hashes(path, tfp0_kread, amficache, mem.next);
-    printf("rv = %d, numhash = %d \n", rv, numhash);
+    grab_hashes(path, tfp0_kread, amficache, mem.next);
     
     size_t length = (sizeof(mem) + numhash * 20 + 0xFFFF) & ~0xFFFF;
     
     uint64_t kernel_trust;
     mach_vm_allocate(tfp0, (mach_vm_address_t *)&kernel_trust, length, VM_FLAGS_ANYWHERE);
-    printf("alloc'd: 0x%zx => 0x%llx \n", length, kernel_trust);
     
     mem.count = numhash;
-    kwrite(tfp0, kernel_trust, &mem, sizeof(mem));
-    kwrite(tfp0, kernel_trust + sizeof(mem), allhash, numhash * 20);
-    kwrite_uint64(tfp0, trust_cache, kernel_trust);
+    kwrite(kernel_trust, &mem, sizeof(mem));
+    kwrite(kernel_trust + sizeof(mem), allhash, numhash * 20);
+    kwrite_uint64(trust_cache, kernel_trust);
     
     free(allhash);
     free(allkern);
     free(amfitab);
     
-    printf("[amfi] get fucked \n");
+    printf("[amfi] get fucked @ %s (%d files) \n", path, numhash);
 }
 
 // creds to stek29(?)
@@ -71,7 +68,7 @@ void inject_trust(const char *path) {
     
     struct trust_chain fake_chain;
     
-    fake_chain.next = rk64(tfp0, trust_cache);
+    fake_chain.next = rk64(trust_cache);
     *(uint64_t *)&fake_chain.uuid[0] = 0xabadbabeabadbabe;
     *(uint64_t *)&fake_chain.uuid[8] = 0xabadbabeabadbabe;
     fake_chain.count = 1;
@@ -90,8 +87,8 @@ void inject_trust(const char *path) {
     uint64_t kernel_trust = 0;
     mach_vm_allocate(tfp0, &kernel_trust, sizeof(fake_chain), VM_FLAGS_ANYWHERE);
     
-    kwrite(tfp0, kernel_trust, &fake_chain, sizeof(fake_chain));
-    wk64(tfp0, trust_cache, kernel_trust);
+    kwrite(kernel_trust, &fake_chain, sizeof(fake_chain));
+    wk64(trust_cache, kernel_trust);
     
     printf("[amfi] signed %s \n", path);
 }

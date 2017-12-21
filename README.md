@@ -14,6 +14,19 @@ Offsets for iPod 6G (iPod7,1) 10.3.3, iPhone 7 (iPhone9,1) 10.3.3 and iPhone 6S 
 
 To find your own offsets read [this guide](https://gist.github.com/uroboro/5b2b2b2aa1793132c4e91826ce844957).
 
+You may also need to find the OFFSET_ROOT_MOUNT_V_NODE offset, which was added with the root r/w capability. To find the offset, first get a decrypted version of your kerelcache. Then use the following command:
+
+```nm <kernelcache> | grep -E " _rootvnode$"```
+
+Example output:
+
+```Bens-MBP:i71031Original Ben$ nm kernelcache | grep _rootvnode
+fffffff0075ec0b0 S _rootvnode
+```
+
+Make sure to add a '0x' to the start of the address too:
+
+`0xfffffff0075ec0b0`
 
 ### Requirements
 

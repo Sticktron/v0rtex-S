@@ -5,8 +5,6 @@
 
 #include "common.h"
 
-typedef kern_return_t (*v0rtex_cb_t)(task_t tfp0, kptr_t kbase, void *data);
-
-kern_return_t v0rtex(v0rtex_cb_t callback, void *cb_data);
+kern_return_t v0rtex(task_t *tfp0, kptr_t *kslide, kptr_t *kernucred, kptr_t *selfproc);
 
 #endif

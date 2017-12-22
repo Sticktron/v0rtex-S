@@ -166,7 +166,7 @@ kptr_t self_proc;
         // Launch dropbear
         NSLog(@"MAKE SURE TO FIRST RUN 'export PATH=$PATH:/v0rtex/bins' WHEN FIRST CONNECTING TO SSH");
         execprog(kern_ucred, "/v0rtex/dropbear", (const char**)&(const char*[]){
-            "/v0rtex/dropbear", "-R", "-E", "-m", "-F", "-S", "/", NULL
+            "/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", NULL
         });
     }
     

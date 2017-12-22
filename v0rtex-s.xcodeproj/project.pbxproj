@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B514CC681FEC8691005F4E6B /* binCreation in Resources */ = {isa = PBXBuildFile; fileRef = B514CC671FEC8691005F4E6B /* binCreation */; };
 		B544A5C61FEB2F3400AA5749 /* bootstrap.tar in Resources */ = {isa = PBXBuildFile; fileRef = B544A5C51FEB2F3400AA5749 /* bootstrap.tar */; };
 		B58B32401FE4EBA300EB7B47 /* kernel.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B323D1FE4EBA300EB7B47 /* kernel.m */; };
 		B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32451FE4ED6300EB7B47 /* symbols.m */; };
 		B58B32491FE4F3DF00EB7B47 /* root-rw.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32481FE4F3DF00EB7B47 /* root-rw.m */; };
 		B58B325C1FE525A300EB7B47 /* dropbear.plist in Resources */ = {isa = PBXBuildFile; fileRef = B58B325A1FE525A300EB7B47 /* dropbear.plist */; };
+		B5BB8F791FE4D97800B60FDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5BB8F781FE4D97800B60FDC /* README.md */; };
 		B5C5C5D31FE9C51A0022D2EC /* amfi.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C5C5D21FE9C51A0022D2EC /* amfi.m */; };
 		B5C5C5D61FE9DADC0022D2EC /* bash in Resources */ = {isa = PBXBuildFile; fileRef = B5C5C5D51FE9DADC0022D2EC /* bash */; };
 		B5C5C5DE1FE9EF670022D2EC /* launchctl in Resources */ = {isa = PBXBuildFile; fileRef = B5C5C5DD1FE9EF660022D2EC /* launchctl */; };
@@ -30,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B514CC671FEC8691005F4E6B /* binCreation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = binCreation; sourceTree = "<group>"; };
 		B544A5C51FEB2F3400AA5749 /* bootstrap.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = bootstrap.tar; sourceTree = "<group>"; };
 		B58B323D1FE4EBA300EB7B47 /* kernel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = kernel.m; sourceTree = "<group>"; };
 		B58B323F1FE4EBA300EB7B47 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel.h; sourceTree = "<group>"; };
@@ -39,6 +42,7 @@
 		B58B324A1FE4F3F900EB7B47 /* root-rw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "root-rw.h"; sourceTree = "<group>"; };
 		B58B32561FE5237000EB7B47 /* libjb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libjb.h; sourceTree = "<group>"; };
 		B58B325A1FE525A300EB7B47 /* dropbear.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = dropbear.plist; sourceTree = "<group>"; };
+		B5BB8F781FE4D97800B60FDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B5C5C5D21FE9C51A0022D2EC /* amfi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = amfi.m; sourceTree = "<group>"; };
 		B5C5C5D41FE9C8CC0022D2EC /* amfi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfi.h; sourceTree = "<group>"; };
 		B5C5C5D51FE9DADC0022D2EC /* bash */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bash; sourceTree = "<group>"; };
@@ -77,22 +81,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		EE2417841FEC443600B4FDF6 /* payload */ = {
-			isa = PBXGroup;
-			children = (
-				B544A5C51FEB2F3400AA5749 /* bootstrap.tar */,
-				B5C5C5D51FE9DADC0022D2EC /* bash */,
-				B5ED69071FEAFA1500D5DCC7 /* dropbear */,
-				B58B325A1FE525A300EB7B47 /* dropbear.plist */,
-				B5C5C5DD1FE9EF660022D2EC /* launchctl */,
-				B5E66A591FE824FD00C7530E /* tar */,
-			);
-			path = payload;
-			sourceTree = "<group>";
-		};
 		EE5252A01FDA4F2F00993801 = {
 			isa = PBXGroup;
 			children = (
+				B5BB8F781FE4D97800B60FDC /* README.md */,
+				B514CC671FEC8691005F4E6B /* binCreation */,
 				EE5252AB1FDA4F2F00993801 /* v0rtex-S */,
 				EE5252AA1FDA4F2F00993801 /* Products */,
 				EE665E201FDBFDB600FF457E /* Frameworks */,
@@ -110,6 +103,13 @@
 		EE5252AB1FDA4F2F00993801 /* v0rtex-S */ = {
 			isa = PBXGroup;
 			children = (
+				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
+				B5C5C5D51FE9DADC0022D2EC /* bash */,
+				B544A5C51FEB2F3400AA5749 /* bootstrap.tar */,
+				B5ED69071FEAFA1500D5DCC7 /* dropbear */,
+				B58B325A1FE525A300EB7B47 /* dropbear.plist */,
+				B5C5C5DD1FE9EF660022D2EC /* launchctl */,
+				B5E66A591FE824FD00C7530E /* tar */,
 				EE5252BB1FDA4F2F00993801 /* main.m */,
 				EE5252AC1FDA4F2F00993801 /* AppDelegate.h */,
 				EE5252AD1FDA4F2F00993801 /* AppDelegate.m */,
@@ -118,10 +118,6 @@
 				EE5169291FDC2C9D00805460 /* common.h */,
 				EE81AD151FDEF1AB0094418B /* v0rtex.h */,
 				EE5169271FDC2A7000805460 /* v0rtex.m */,
-				B5E66A501FE6D8A800C7530E /* patchfinder64.c */,
-				B5E66A4F1FE6D8A700C7530E /* patchfinder64.h */,
-				B5E66A5B1FE86DD900C7530E /* libjb.a */,
-				B58B32561FE5237000EB7B47 /* libjb.h */,
 				B58B323F1FE4EBA300EB7B47 /* kernel.h */,
 				B58B323D1FE4EBA300EB7B47 /* kernel.m */,
 				B5C5C5D21FE9C51A0022D2EC /* amfi.m */,
@@ -130,8 +126,10 @@
 				B58B32471FE4EDCF00EB7B47 /* symbols.h */,
 				B58B32481FE4F3DF00EB7B47 /* root-rw.m */,
 				B58B324A1FE4F3F900EB7B47 /* root-rw.h */,
-				EE2417841FEC443600B4FDF6 /* payload */,
-				EEAC27D31FDDB0A3003C1801 /* Supporting Files */,
+				B5E66A5B1FE86DD900C7530E /* libjb.a */,
+				B58B32561FE5237000EB7B47 /* libjb.h */,
+				B5E66A501FE6D8A800C7530E /* patchfinder64.c */,
+				B5E66A4F1FE6D8A700C7530E /* patchfinder64.h */,
 			);
 			path = "v0rtex-S";
 			sourceTree = "<group>";
@@ -181,7 +179,7 @@
 		EE5252A11FDA4F2F00993801 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Sticktron;
 				TargetAttributes = {
 					EE5252A81FDA4F2F00993801 = {
@@ -190,7 +188,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex-S" */;
+			buildConfigurationList = EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex-s" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -213,12 +211,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B514CC681FEC8691005F4E6B /* binCreation in Resources */,
 				B5ED69081FEAFA1500D5DCC7 /* dropbear in Resources */,
 				B5C5C5D61FE9DADC0022D2EC /* bash in Resources */,
 				EE5252B91FDA4F2F00993801 /* LaunchScreen.storyboard in Resources */,
 				B5C5C5DE1FE9EF670022D2EC /* launchctl in Resources */,
 				B5E66A5A1FE824FD00C7530E /* tar in Resources */,
 				EE5252B61FDA4F2F00993801 /* Assets.xcassets in Resources */,
+				B5BB8F791FE4D97800B60FDC /* README.md in Resources */,
 				EE5252B41FDA4F2F00993801 /* Main.storyboard in Resources */,
 				B544A5C61FEB2F3400AA5749 /* bootstrap.tar in Resources */,
 				B58B325C1FE525A300EB7B47 /* dropbear.plist in Resources */,
@@ -309,7 +309,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -360,7 +359,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
@@ -377,22 +375,20 @@
 		EE5252C01FDA4F2F00993801 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 23C653WLNB;
+				DEVELOPMENT_TEAM = 6EKJWC698P;
 				ENABLE_BITCODE = NO;
 				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/v0rtex-S",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sticktron.v0rtex-s";
+				PRODUCT_BUNDLE_IDENTIFIER = zone.sparkes.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -403,22 +399,20 @@
 		EE5252C11FDA4F2F00993801 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 23C653WLNB;
+				DEVELOPMENT_TEAM = 6EKJWC698P;
 				ENABLE_BITCODE = NO;
 				GCC_NO_COMMON_BLOCKS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/v0rtex-S/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/v0rtex-S",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sticktron.v0rtex-s";
+				PRODUCT_BUNDLE_IDENTIFIER = zone.sparkes.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -429,7 +423,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex-S" */ = {
+		EE5252A41FDA4F2F00993801 /* Build configuration list for PBXProject "v0rtex-s" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EE5252BD1FDA4F2F00993801 /* Debug */,

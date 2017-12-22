@@ -68,17 +68,18 @@ kptr_t self_proc;
     kslide = 0;
     kern_ucred = 0;
     self_proc = 0;
-    
+	
     kern_return_t ret = v0rtex(&tfp0, &kslide, &kern_ucred, &self_proc);
     if (ret != KERN_SUCCESS) {
         [self writeText:@"ERROR: exploit failed \n"];
         return;
     }
+	
     self.sploitButton.enabled = NO;
+	
     [self writeText:@"exploit succeeded!"];
-    
-    printf("got val for self_proc = 0x%llx \n", self_proc);
-    printf("got val for kern_ucred = 0x%llx \n", kern_ucred);
+    LOG("got val for self_proc = 0x%llx \n", self_proc);
+    LOG("got val for kern_ucred = 0x%llx \n", kern_ucred);
     
     {
         // set up stuff
@@ -151,6 +152,8 @@ kptr_t self_proc;
         mkdir("/var/log", 0777);
         FILE *lastLog = fopen("/var/log/lastlog", "ab+");
         fclose(lastLog);
+        
+        [self writeText:@"copied bins and set up envrionment"];
     }
     
     {
@@ -166,14 +169,17 @@ kptr_t self_proc;
         
         // sign all the binaries
         trust_files("/v0rtex/bins");
+        
+        [self writeText:@"extracted and signed all bins"];
     }
     
     {
         // Launch dropbear
         NSLog(@"MAKE SURE TO FIRST RUN 'export PATH=$PATH:/v0rtex/bins' WHEN FIRST CONNECTING TO SSH");
         execprog(kern_ucred, "/v0rtex/dropbear", (const char**)&(const char*[]){
-            "/v0rtex/dropbear", "-R", "-E", "-m", "-F", "-S", "/", NULL
+            "/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", NULL
         });
+        [self writeText:@"dropbear launched"];
     }
     
     // Done.

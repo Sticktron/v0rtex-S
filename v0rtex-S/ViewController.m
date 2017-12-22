@@ -63,12 +63,11 @@ kptr_t self_proc;
     self_proc = 0;
     
     kern_return_t ret = v0rtex(&tfp0, &kslide, &kern_ucred, &self_proc);
-    
     if (ret != KERN_SUCCESS) {
-        [self writeText:@"ERROR: exploit failed"];
+        [self writeText:@"ERROR: exploit failed \n"];
         return;
     }
-    
+    self.sploitButton.enabled = NO;
     [self writeText:@"exploit succeeded!"];
     
     printf("got val for self_proc = 0x%llx \n", self_proc);

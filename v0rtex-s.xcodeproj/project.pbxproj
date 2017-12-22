@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B514CC681FEC8691005F4E6B /* binCreation in Resources */ = {isa = PBXBuildFile; fileRef = B514CC671FEC8691005F4E6B /* binCreation */; };
 		B544A5C61FEB2F3400AA5749 /* bootstrap.tar in Resources */ = {isa = PBXBuildFile; fileRef = B544A5C51FEB2F3400AA5749 /* bootstrap.tar */; };
 		B58B32401FE4EBA300EB7B47 /* kernel.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B323D1FE4EBA300EB7B47 /* kernel.m */; };
 		B58B32461FE4ED6300EB7B47 /* symbols.m in Sources */ = {isa = PBXBuildFile; fileRef = B58B32451FE4ED6300EB7B47 /* symbols.m */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B514CC671FEC8691005F4E6B /* binCreation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = binCreation; sourceTree = "<group>"; };
 		B544A5C51FEB2F3400AA5749 /* bootstrap.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = bootstrap.tar; sourceTree = "<group>"; };
 		B58B323D1FE4EBA300EB7B47 /* kernel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = kernel.m; sourceTree = "<group>"; };
 		B58B323F1FE4EBA300EB7B47 /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel.h; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				B5BB8F781FE4D97800B60FDC /* README.md */,
+				B514CC671FEC8691005F4E6B /* binCreation */,
 				EE5252AB1FDA4F2F00993801 /* v0rtex-S */,
 				EE5252AA1FDA4F2F00993801 /* Products */,
 				EE665E201FDBFDB600FF457E /* Frameworks */,
@@ -176,7 +179,7 @@
 		EE5252A11FDA4F2F00993801 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Sticktron;
 				TargetAttributes = {
 					EE5252A81FDA4F2F00993801 = {
@@ -208,6 +211,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B514CC681FEC8691005F4E6B /* binCreation in Resources */,
 				B5ED69081FEAFA1500D5DCC7 /* dropbear in Resources */,
 				B5C5C5D61FE9DADC0022D2EC /* bash in Resources */,
 				EE5252B91FDA4F2F00993801 /* LaunchScreen.storyboard in Resources */,
@@ -371,7 +375,6 @@
 		EE5252C01FDA4F2F00993801 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -385,7 +388,7 @@
 					"$(PROJECT_DIR)/v0rtex-S",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.talanov.v0rtex-S";
+				PRODUCT_BUNDLE_IDENTIFIER = zone.sparkes.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -396,7 +399,6 @@
 		EE5252C11FDA4F2F00993801 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -410,7 +412,7 @@
 					"$(PROJECT_DIR)/v0rtex-S",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.talanov.v0rtex-S";
+				PRODUCT_BUNDLE_IDENTIFIER = zone.sparkes.v0rtex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

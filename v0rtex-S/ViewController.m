@@ -21,6 +21,7 @@
 #include <CommonCrypto/CommonDigest.h>
 #include <mach-o/loader.h>
 #include <sys/dir.h>
+#include <sys/utsname.h>
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *outputView;
@@ -37,18 +38,24 @@ kptr_t self_proc;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.sploitButton.layer.cornerRadius = 6;
+    self.sploitButton.layer.cornerRadius = 8;
+    [self.sploitButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateDisabled];
+    
     self.outputView.layer.cornerRadius = 6;
+    self.outputView.text = nil;
     
-    // Attempt to init our offsets
-    // Disable the run button if no offsets were found
-    if (!init_symbols()) {
+    // print kernel version
+    struct utsname u;
+    uname(&u);
+    [self writeText:[NSString stringWithFormat:@"%s \n", u.version]];
+     
+    // init offsets
+    if (init_symbols()) {
+        [self writeText:@"Ready. \n"];
+    } else {
         [self writeText:@"Device not supported."];
-        [self.sploitButton setHidden:TRUE];
-        return;
+        self.sploitButton.enabled = NO;
     }
-    
-    [self writeText:@"> ready."];
 }
 
 - (IBAction)runSploitButton:(UIButton *)sender {

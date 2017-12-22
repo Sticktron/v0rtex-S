@@ -21,6 +21,7 @@
 #include <CommonCrypto/CommonDigest.h>
 #include <mach-o/loader.h>
 #include <sys/dir.h>
+#include <sys/utsname.h>
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *outputView;
@@ -39,6 +40,13 @@ kptr_t self_proc;
     
     self.sploitButton.layer.cornerRadius = 6;
     self.outputView.layer.cornerRadius = 6;
+    
+    // Log current device and version info
+    NSString *ver = [[NSProcessInfo processInfo] operatingSystemVersionString];
+    struct utsname u;
+    uname(&u);
+    
+    [self writeText:[NSString stringWithFormat:@"found %s on iOS %@", u.machine, ver]];
     
     // Attempt to init our offsets
     // Disable the run button if no offsets were found
@@ -145,6 +153,8 @@ kptr_t self_proc;
         mkdir("/var/log", 0777);
         FILE *lastLog = fopen("/var/log/lastlog", "ab+");
         fclose(lastLog);
+        
+        [self writeText:@"copied bins and set up envrionment"];
     }
     
     {
@@ -160,6 +170,8 @@ kptr_t self_proc;
         
         // sign all the binaries
         trust_files("/v0rtex/bins");
+        
+        [self writeText:@"extracted and signed all bins"];
     }
     
     {
@@ -168,6 +180,7 @@ kptr_t self_proc;
         execprog(kern_ucred, "/v0rtex/dropbear", (const char**)&(const char*[]){
             "/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", NULL
         });
+        [self writeText:@"dropbear launched"];
     }
     
     // Done.

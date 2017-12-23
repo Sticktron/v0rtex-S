@@ -53,141 +53,153 @@ kptr_t self_proc;
     if (init_symbols()) {
         [self writeText:@"Ready. \n"];
     } else {
-        [self writeText:@"Device not supported."];
+        [self writeText:@"❌ Device/OS not supported."];
         self.sploitButton.enabled = NO;
     }
 }
 
 - (IBAction)runSploitButton:(UIButton *)sender {
-    
-    // Run v0rtex
-    
-    [self writeText:@"> running exploit..."];
+    [self writeText:@"> exploiting kernel..."];
     
     tfp0 = MACH_PORT_NULL;
     kslide = 0;
     kern_ucred = 0;
     self_proc = 0;
 	
+    
+    /* Use v0rtex exploit */
+    
     kern_return_t ret = v0rtex(&tfp0, &kslide, &kern_ucred, &self_proc);
     if (ret != KERN_SUCCESS) {
+        LOG("v0rtex exploit failed");
         [self writeText:@"ERROR: exploit failed \n"];
         return;
     }
 	
     self.sploitButton.enabled = NO;
+    [self writeText:@"exploit succeeded ✅ \n"];
 	
-    [self writeText:@"exploit succeeded!"];
-    LOG("got val for self_proc = 0x%llx \n", self_proc);
-    LOG("got val for kern_ucred = 0x%llx \n", kern_ucred);
+    LOG("tfp0 -> %x", tfp0);
+    LOG("slide -> 0x%llx", kslide);
+    LOG("self_proc -> 0x%llx", self_proc);
+    LOG("kern_ucred -> 0x%llx", kern_ucred);
     
-    {
-        // set up stuff
-        init_patchfinder(tfp0, kslide + 0xFFFFFFF007004000, NULL);
-        init_amfi(tfp0);
-        init_kernel(tfp0);
+    
+    /* Set up patchfinder and stuff */
+    
+    init_patchfinder(tfp0, kslide + 0xFFFFFFF007004000, NULL);
+    init_amfi(tfp0);
+    init_kernel(tfp0);
+    
+    
+    /* Remount system partition as r/w */
+    
+    int remount = mount_root(tfp0, kslide);
+    if (remount != 0) {
+        LOG("failed to remount /");
+        [self writeText:@"ERROR: failed to remount system partition \n"];
+        return;
     }
+    [self writeText:@"remounted system partition as r/w ✅"];
+
     
-    {
-        // Remount '/' as r/w
-        int remount = mount_root(tfp0, kslide);
-        LOG("remount: %d", remount);
-        if (remount != 0) {
-            [self writeText:[NSString stringWithFormat:@"ERROR: failed to remount '/' as r/w (%d)", remount]];
-            return;
-        }
-        [self writeText:@"remounted '/' as r/w"];
-    }
+    /* Install payload */
     
+    [self writeText:@"installing payload"];
     {
-        // Check we have '/' access
-        bool rootAccess = can_write_root();
-        [self writeText:[NSString stringWithFormat:@"can write to root: %@", rootAccess ? @"yes" : @"no"]];
-        LOG("has root access: %s", rootAccess ? "yes" : "no");
-    }
-    
-    {
-        // create v0rtex dirs
+        NSFileManager *fileMgr = [NSFileManager defaultManager];
+        NSString *bundlePath = [NSString stringWithFormat:@"%s", bundle_path()];
+        
+        // cleanup leftovers
+        [fileMgr removeItemAtPath:@"/v0rtex" error:nil];
+        [fileMgr removeItemAtPath:@"/bin/sh" error:nil];
+        LOG("removed old payload files");
+        
+        // create dirs for v0rtex
         mkdir("/v0rtex", 0777);
         mkdir("/v0rtex/bins", 0777);
         mkdir("/v0rtex/logs", 0777);
         
-    }
-    
-    // init filemanager n bundlepath
-    NSFileManager *fileMgr = [NSFileManager defaultManager];
-    NSString *bundlePath = [NSString stringWithFormat:@"%s", bundle_path()];
-    
-    {
-        // remove old files
-        NSLog(@"removing old files...");
-        [fileMgr removeItemAtPath:@"/v0rtex/bins" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/bootstrap.tar" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/bootstrap2.tar" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/dropbear" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/start.sh" error:nil];
-        [fileMgr removeItemAtPath:@"/v0rtex/tar" error:nil];
-        [fileMgr removeItemAtPath:@"/bin/sh" error:nil];
-        
-        // copy in all our bins
-        NSLog(@"copying bins...");
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/bootstrap.tar"]
-                         toPath:@"/v0rtex/bootstrap.tar" error: nil];
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear"]
-                         toPath:@"/v0rtex/dropbear" error:nil];
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/tar"]
-                         toPath:@"/v0rtex/tar" error:nil];
-        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/bash"]
-                         toPath:@"/bin/sh" error:nil];
-        
-        // make sure all our bins have perms
-        chmod("/v0rtex/dropbear", 0777);
-        chmod("/v0rtex/tar", 0777);
-        chmod("/bin/sh", 0777);
-        
-        // create dir's and files for dropbear
-        mkdir("/etc", 0777);
+        // create dirs and files for dropbear
+        //    mkdir("/etc", 0777);
         mkdir("/etc/dropbear", 0777);
-        mkdir("/var", 0777);
-        mkdir("/var/log", 0777);
+        //    mkdir("/var", 0777);
+        //    mkdir("/var/log", 0777);
         FILE *lastLog = fopen("/var/log/lastlog", "ab+");
         fclose(lastLog);
         
-        [self writeText:@"copied bins and set up envrionment"];
-    }
-    
-    {
+        // copy files from bundle
+        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/bootstrap.tar"]
+                         toPath:@"/v0rtex/bootstrap.tar" error: nil];
+
+        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/tar"]
+                         toPath:@"/v0rtex/tar" error:nil];
+        
+        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/bash"]
+                         toPath:@"/bin/sh" error:nil];
+        
+        [fileMgr copyItemAtPath:[bundlePath stringByAppendingString:@"/dropbear"]
+                         toPath:@"/v0rtex/dropbear" error:nil];
+        
+        // grant permissions
+        chmod("/v0rtex/tar", 0777);
+        chmod("/bin/sh", 0777);
+        chmod("/v0rtex/dropbear", 0777);
+        LOG("granted some permission");
+        
         // fuck up amfi
+        inject_trust("/v0rtex/tar");
         inject_trust("/bin/sh");
         inject_trust("/v0rtex/dropbear");
-        inject_trust("/v0rtex/tar");
-    }
-    
-    {
-        // extract bootstrap.tar
+        LOG("fucked up amfi");
+        
+        // extract payload
         execprog(0, "/v0rtex/tar", (const char **)&(const char*[]){ "/v0rtex/tar", "-xf", "/v0rtex/bootstrap.tar", "-C", "/v0rtex", NULL });
+        LOG("un-tarred payload");
         
-        // sign all the binaries
+        // trust files in payload
         trust_files("/v0rtex/bins");
+        [self writeText:@"trusted payload binaries"];
         
-        [self writeText:@"extracted and signed all bins"];
+        // create bash profiles with our bin path
+        if (![fileMgr fileExistsAtPath:@"/var/mobile/.profile"]) {
+            [fileMgr createFileAtPath:@"/var/mobile/.profile" contents:[[NSString stringWithFormat:@"export PATH=$PATH:/v0rtex/bins"] dataUsingEncoding:NSASCIIStringEncoding] attributes:nil];
+        }
+        if (![fileMgr fileExistsAtPath:@"/var/root/.profile"]) {
+            [fileMgr createFileAtPath:@"/var/root/.profile" contents:[[NSString stringWithFormat:@"export PATH=$PATH:/v0rtex/bins"] dataUsingEncoding:NSASCIIStringEncoding] attributes:nil];
+        }
+        
+        // leave a footprint ;)
+        FILE *f = fopen("/.installed_v0rtex", "w");
+        fclose(f);
+        
+        // no stashing please !!!
+        FILE *f2 = fopen("/.cydia_no_stash", "w");
+        fclose(f2);
     }
     
-    {
-        // Launch dropbear
-        NSLog(@"MAKE SURE TO FIRST RUN 'export PATH=$PATH:/v0rtex/bins' WHEN FIRST CONNECTING TO SSH");
-        execprog(kern_ucred, "/v0rtex/dropbear", (const char**)&(const char*[]){
-            "/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", NULL
-        });
-        [self writeText:@"dropbear launched"];
-    }
     
-    // Done.
-    [self writeText:@"\n done."];
+    /* Launch dropbear */
+    
+    [self writeText:@"launching dropbear"];
+    
+    execprog(kern_ucred, "/v0rtex/bins/dropbear", (const char**)&(const char*[]){
+        //"/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", NULL
+        "/v0rtex/dropbear", "-R", "-E", "-m", "-p2222", NULL
+    });
+    
+    [self writeText:@"* dropbear should now be running on port 2222"];
+    [self writeText:@"* to connect:ssh -p2222 root@{YOUR_DEVICE_IP}"];
+    [self writeText:@"\n"];
+    
+    
+    /* The End. */
+    
+    [self writeText:@"All done, peace!"];
 }
 
 - (void)writeText:(NSString *)text {
-    self.outputView.text = [self.outputView.text stringByAppendingString:[text stringByAppendingString:@"\n"]];
+    self.outputView.text = [NSString stringWithFormat:@"%@%@ \n", self.outputView.text, text];
 }
 
 // creds to stek on this one
@@ -381,11 +393,6 @@ void read_file(const char *path) {
     printf("\n-------------------------\n");
     
     close(fd);
-}
-
-bool can_write_root() {
-    FILE *f = fopen("/file123.txt", "w");
-    return f != 0;
 }
 
 char* bundle_path() {

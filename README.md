@@ -13,6 +13,11 @@ A partial jailbreak for iOS 10.3.x based on Siguza's [v0rtex](https://github.com
 - helpful pack of command line tools
 
 
+## Screenshot
+
+<img width="375" src="screenshot.png" alt="Screenshot"/>
+
+
 ## Offsets
 
 Currently includes offsets for:
@@ -33,11 +38,6 @@ There are a few new offsets you will need to find:
 **OFFSET_KAUTH_CRED_REF**: This can be found in the symbols table ```nm <kernelcache> | grep kauth_cred_ref```
 
 
-### Screenshot
-
-<img width="375" src="screenshot.png" alt="Screenshot"/>
-
-
-### Credits
+## Credits
 
 This project features work from a variety of people, mainly siguza and xerub, but also other people who's names will show up here at some point.

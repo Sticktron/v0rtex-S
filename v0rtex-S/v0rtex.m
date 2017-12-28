@@ -21,21 +21,7 @@
 
 #include "common.h"
 #include "symbols.h"
-#include "symbols.h"
-
-#define SIZEOF_TASK                                 0x550
-#define OFFSET_TASK_ITK_SELF                        0xd8
-#define OFFSET_TASK_ITK_REGISTERED                  0x2e8
-#define OFFSET_TASK_BSD_INFO                        0x360
-#define OFFSET_PROC_P_PID                           0x10
-#define OFFSET_PROC_UCRED                           0x100
-#define OFFSET_UCRED_CR_UID                         0x18
-#define OFFSET_UCRED_CR_LABEL                       0x78
-#define OFFSET_VM_MAP_HDR                           0x10
-#define OFFSET_IPC_SPACE_IS_TASK                    0x28
-#define OFFSET_REALHOST_SPECIAL                     0x10
-#define OFFSET_IOUSERCLIENT_IPC                     0x9c
-#define OFFSET_VTAB_GET_EXTERNAL_TRAP_FOR_INDEX     0x5b8
+#include "v0rtex.h"
 
 #define KPTR_ALIGN(addr) (((addr) + sizeof(kptr_t) - 1) & ~(sizeof(kptr_t) - 1))
 

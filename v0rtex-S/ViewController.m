@@ -163,10 +163,10 @@ kptr_t self_proc;
         
         // create bash profiles with our bin path
         if (![fileMgr fileExistsAtPath:@"/var/mobile/.profile"]) {
-            [fileMgr createFileAtPath:@"/var/mobile/.profile" contents:[[NSString stringWithFormat:@"export PATH=$PATH:/v0rtex/bins"] dataUsingEncoding:NSASCIIStringEncoding] attributes:nil];
+            [fileMgr createFileAtPath:@"/var/mobile/.profile" contents:[[NSString stringWithFormat:@"export PATH=/v0rtex/bins:$PATH"] dataUsingEncoding:NSASCIIStringEncoding] attributes:nil];
         }
         if (![fileMgr fileExistsAtPath:@"/var/root/.profile"]) {
-            [fileMgr createFileAtPath:@"/var/root/.profile" contents:[[NSString stringWithFormat:@"export PATH=$PATH:/v0rtex/bins"] dataUsingEncoding:NSASCIIStringEncoding] attributes:nil];
+            [fileMgr createFileAtPath:@"/var/root/.profile" contents:[[NSString stringWithFormat:@"export PATH=/v0rtex/bins:$PATH"] dataUsingEncoding:NSASCIIStringEncoding] attributes:nil];
         }
         
         // leave a footprint ;)

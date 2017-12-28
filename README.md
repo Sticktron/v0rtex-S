@@ -3,6 +3,11 @@
 A simple iOS app (including Xcode project) that can be used for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit. Implements some post-exploit "kppless" fun, leading to a working shell with ssh access.
 
 
+## Requirements
+
+A 64-bit device on iOS 10.3 - 10.3.3
+
+
 ## What you get
 
 - task for port 0

@@ -2,6 +2,7 @@
 
 A simple iOS app (including Xcode project) that can be used for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit. Implements some post-exploit "kppless" fun, leading to a working shell with ssh access.
 
+
 ## What you get
 
 - task for port 0
@@ -9,12 +10,18 @@ A simple iOS app (including Xcode project) that can be used for testing Siguza's
 - system partition r/w
 - AMFI/codesigning patch for included binaries
 - Dropbear SSH server listening on port 2222
-- command line tool pack (add your own binaries)
+
 
 ## Will this mess up my filesystem?
 
 No. Files are installed to /v0rtex and /v0rtex/bins to avoid contaminating the filesystem.
 The only exceptions are: /bin/sh, and .profile files for root and mobile accounts.
+
+
+## Can I add my own binaries to test?
+
+Yes. Copy them to the /binCreation/bins directory and run the packBins.sh script to create a new bootstrap.tar file, which you can use to replace the one in the project.
+
 
 ## Screenshot
 

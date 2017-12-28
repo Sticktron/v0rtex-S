@@ -101,7 +101,35 @@ kptr_t self_proc;
         return;
     }
     [self writeText:@"remounted system partition as r/w ✅"];
-
+    
+    uint32_t our_pid = getpid();
+    uint64_t our_proc = 0;
+    uint64_t kern_proc = 0;
+    uint64_t amfid_proc = 0;
+    uint32_t amfid_pid = 0;
+    
+    uint64_t proc = rk64(find_allproc());
+    while (proc)
+    {
+        uint32_t pid = (uint32_t)rk32(proc + OFFSET_PROC_P_PID);
+        char name[40] = {0};
+        kread(proc+0x268, name, 20);
+        if (pid == our_pid)
+        {
+            our_proc = proc;
+        }
+        else if (pid == 0)
+        {
+            kern_proc = proc;
+        }
+        else if (strstr(name, "amfid"))
+        {
+            printf("found amfid - getting task\n");
+            amfid_proc = proc;
+            amfid_pid = pid;
+        }
+        proc = rk64(proc);
+    }
     
     /* Install payload */
     

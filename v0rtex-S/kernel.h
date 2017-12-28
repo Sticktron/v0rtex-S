@@ -16,6 +16,7 @@ void wk64(uint64_t kaddr, uint64_t val);
 void wk32(uint64_t kaddr, uint32_t val);
 size_t kwrite(uint64_t where, const void *p, size_t size);
 size_t kwrite_uint64(uint64_t where, uint64_t value);
+size_t kread(uint64_t where, void *p, size_t size);
 
 kern_return_t mach_vm_write(vm_map_t target_task,
                             mach_vm_address_t address,

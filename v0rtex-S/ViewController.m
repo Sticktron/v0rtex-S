@@ -100,7 +100,7 @@ kptr_t self_proc;
         [self writeText:@"ERROR: failed to remount system partition \n"];
         return;
     }
-    [self writeText:@"remounted system partition as r/w ✅"];
+    [self writeText:@"remounted system partition as r/w"];
 
     
     /* Install payload */
@@ -183,9 +183,8 @@ kptr_t self_proc;
     
     [self writeText:@"launching dropbear"];
     
-    execprog(kern_ucred, "/v0rtex/bins/dropbear", (const char**)&(const char*[]){
-        //"/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", NULL
-        "/v0rtex/dropbear", "-R", "-E", "-m", "-p2222", NULL
+    execprog(kern_ucred, "/v0rtex/dropbear", (const char**)&(const char*[]){
+        "/v0rtex/dropbear", "-R", "-E", "-m", "-S", "/", "-p", "2222", NULL
     });
     
     [self writeText:@"* dropbear should now be running on port 2222"];

@@ -1,17 +1,20 @@
-# v0rtex-S
+# v0rtex type-S
 
-A partial jailbreak for iOS 10.3.x based on Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit.
-
+A simple iOS app (including Xcode project) that can be used for testing Siguza's [v0rtex](https://github.com/Siguza/v0rtex) kernel exploit. Implements some post-exploit "kppless" fun, leading to a working shell with ssh access.
 
 ## What you get
 
-- tfp0
+- task for port 0
 - kernel memory r/w
 - system partition r/w
-- AMFI/codesigning patch
+- AMFI/codesigning patch for included binaries
 - Dropbear SSH server listening on port 2222
-- helpful pack of command line tools
+- command line tool pack (add your own binaries)
 
+## Will this mess up my filesystem?
+
+No. Files are installed to /v0rtex and /v0rtex/bins to avoid contaminating the filesystem.
+The only exceptions are: /bin/sh, and .profile files for root and mobile accounts.
 
 ## Screenshot
 
@@ -40,4 +43,4 @@ There are a few new offsets you will need to find:
 
 ## Credits
 
-This project features work from a variety of people, mainly siguza and xerub, but also other people who's names will show up here at some point.
+This project features work from a variety of people. Siguza for the exploit, xerub, ninjaprawn, PscyhoTea, others.

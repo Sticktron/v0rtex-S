@@ -1,0 +1,194 @@
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1	localhost
+255.255.255.255	broadcasthost
+::1             localhost 
+
+
+# YouKu Client
+127.0.0.1 push.m.youku.com
+127.0.0.1 api.mobile.youku.com
+127.0.0.1 www.sina.com.cn
+127.0.0.1 ad.api.3g.youku.com
+127.0.0.1 track.adsage.com
+127.0.0.1 config.adsage.com
+127.0.0.1 das.api.mobile.youku.com
+127.0.0.1 ss0.bdstatic.com
+
+# PPTV Client
+127.0.0.1 sdk.data.pplive.com
+127.0.0.1 jump.synacast.com
+#127.0.0.1 interactser.mobile.cloudxns.pptv.com
+127.0.0.1 jump.synacast.com.cloudxns.pptv.com
+127.0.0.1 feedback.umeng.com
+#127.0.0.1 pb.pptv.com
+#127.0.0.1 ppvaindex.pplive.com
+#127.0.0.1 img24.pplive.cn
+#127.0.0.1 sr1.pplive.com
+#127.0.0.1 sr2.pplive.com
+#127.0.0.1 sr3.pplive.com
+#127.0.0.1 sr4.pplive.com
+#127.0.0.1 client-list.pptv.com
+127.0.0.1 face.passport.pplive.com
+#127.0.0.1 cldctrl.mobile.pptv.com
+127.0.0.1 de.as.pptv.com
+#127.0.0.1 mtbu.api.pptv.com
+127.0.0.1 ppvabs.pptv.com
+127.0.0.1 ios.config.synacast.com
+127.0.0.1 dev.voicecloud.cn
+127.0.0.1 ip.synacast.com
+127.0.0.1 ppvabs.pplive.com
+127.0.0.1 way.pptv.com
+127.0.0.1 ol.synacast.com
+#127.0.0.1 epg.api.pptv.com
+#127.0.0.1 apicdn.refinfo.sc.pptv.com
+127.0.0.1 recommend.pptv.com
+#127.0.0.1 apicdn.sc.pptv.com
+#127.0.0.1 img3.pplive.cn
+127.0.0.1 panoimage.pptv.com
+#127.0.0.1 img26.pplive.cn
+127.0.0.1 plt.data.pplive.com
+#127.0.0.1 action.data.pplive.com
+
+# WeiPhone Client
+127.0.0.1 version.joyslink.com
+127.0.0.1 g.feng.com
+127.0.0.1 www.weapp.com
+127.0.0.1 alog.umeng.com
+127.0.0.1 www.feng.com
+127.0.0.1 live.feng.com
+127.0.0.1 ads.flurry.com
+127.0.0.1 s.jusha.com
+127.0.0.1 yes1.feng.com
+127.0.0.1 face.weiphone.net
+127.0.0.1 material.jusha.com
+127.0.0.1 s.p.qq.com
+127.0.0.1 i.jusha.com
+
+# XcodeGhost
+127.0.0.1 init.icloud-analysis.com
+
+# Cydia
+127.0.0.1 pagead46.l.doubleclick.net
+127.0.0.1 a90.g2.akamai.net
+127.0.0.1 csi.gstatic.com
+127.0.0.1 go.padstm.com
+127.0.0.1 cdn.millennialmedia.com
+127.0.0.1 cydia.saurik.com.cdngc.net
+
+# TV Live 
+127.0.0.1 mo.baidu.com
+127.0.0.1 oc.umeng.com
+127.0.0.1 fb.umeng.com
+127.0.0.1 resource.ventureinc.net
+127.0.0.1 sdk.e.qq.com
+127.0.0.1 ba1.ventureinc.net
+127.0.0.1 mi.gdt.qq.com
+127.0.0.1 ba2.ventureinc.net
+127.0.0.1 www.ventureinc.net
+127.0.0.1 ip.taobao.com
+127.0.0.1 pgdt.gtimg.cn
+127.0.0.1 v.gdt.qq.com
+127.0.0.1 oss-cn-hangzhou.aliyuncs.com
+#127.0.0.1 qepg.tvesou.com
+127.0.0.1 qzonestyle.gtimg.cn
+#127.0.0.1 changyan.sohu.com
+#127.0.0.1 live9.hbtv.com.cn
+127.0.0.1 www.sinaimg.cn
+
+# iBackdoor
+127.0.0.1 oc.umeng.co
+127.0.0.1 pingma.qq.com
+127.0.0.1 ios.synacast.com
+127.0.0.1 e.crashlytics.com
+127.0.0.1 m.irs01.com
+127.0.0.1 settings.crashlytics.com
+127.0.0.1 mf.atm.youku.com
+127.0.0.1 data.flurry.com
+127.0.0.1 mobilead.kuwo.cn
+127.0.0.1 artistpicserver.kuwo.cn
+127.0.0.1 gxh2.kuwo.cn
+127.0.0.1 img2.kwcdn.kuwo.cn
+127.0.0.1 x.kuwo.cn
+127.0.0.1 img1.kwcdn.kuwo.cn
+127.0.0.1 cgi.connect.qq.com
+127.0.0.1 graph.facebook.com
+127.0.0.1 dp.im.weibo.cn
+127.0.0.1 gw5.push.mcp.weibo.cn
+127.0.0.1 ps.im.weibo.cn
+127.0.0.1 acjs.aliyun.com
+127.0.0.1 mws.adsage.com
+127.0.0.1 entry.adsage.com
+127.0.0.1 www.adsage.cn
+127.0.0.1 track.adsage.com
+127.0.0.1 config.adsage.cn
+127.0.0.1 js.wap.vnet.mobi
+127.0.0.1 wap.jsuuu.com
+127.0.0.1 wap2.cityjs.com
+127.0.0.1 s11.cnzz.com
+127.0.0.1 m.sendspace.com
+
+# Codoon Client
+127.0.0.1 fusion.qq.com
+127.0.0.1 sdk.117show.com
+
+# Sina 
+127.0.0.1 sdkapp.mobile.sina.cn
+127.0.0.1 wbapp.mobile.sina.cn
+127.0.0.1 ps.im.weibo.cn
+127.0.0.1 gw.im.weibo.cn
+127.0.0.1 gw5.push.mcp.weibo.cn
+127.0.0.1 u1.sinaimg.cn
+127.0.0.1 tp2.sinaimg.cn
+127.0.0.1 tp1.sinaimg.cn
+127.0.0.1 gw1.im.weibo.cn
+127.0.0.1 tp3.sinaimg.cn
+127.0.0.1 tp4.sinaimg.cn
+127.0.0.1 sinastorage.com
+127.0.0.1 h5.sinaimg.cn
+
+# WiFiKey
+127.0.0.1 www.whatismyip.com
+127.0.0.1 app.51y5.net
+127.0.0.1 dc.51y5.net
+127.0.0.1 www.lianwifi.com
+127.0.0.1 config.51y5.net
+127.0.0.1 www.whatismyip.com
+127.0.0.1 pmt.51y5.net
+#127.0.0.1 ap.51y5.net
+127.0.0.1 static.51y5.net
+127.0.0.1 wsba.51y5.net
+127.0.0.1 cgi.connect.qq.com
+#127.0.0.1 woa.sdo.com
+127.0.0.1 test.woa.sdo.com
+ 
+# Filza
+127.0.0.1 apis.live.net
+127.0.0.1 login.live.com
+127.0.0.1 upload.box.com
+127.0.0.1 www.turincondeliphone.com
+127.0.0.1 blog.naver.com
+127.0.0.1 tigisoftware.com
+127.0.0.1 www.cknotes.com
+127.0.0.1 api.box.com
+127.0.0.1 api.sugarsync.com
+
+
+# iFile 
+127.0.0.1 iphone.heinelt.eu
+
+# 4G-LTE
+127.0.0.1 alog.umeng.com
+127.0.0.1 auth.unicomlabs.com
+127.0.0.1 h5.gmccopen.com
+
+# Google Ad
+127.0.0.1 www.googleadservices.com
+127.0.0.1 googleads.g.doubleclick.net
+
+
+#  SIN-PROXY, HK-CABLE #
